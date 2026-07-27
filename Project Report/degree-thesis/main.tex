@@ -163,7 +163,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 	
 	\sidenote{\textbf{Objective:} Develop a robust bird's-eye-view perception framework for real-time vehicle detection, localization, and tracking.}
 	
-	The framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco-based homography estimation, and YOLOv8 semantic segmentation for vehicle localization in world coordinates. An Extended Kalman Filter (EKF) refines the estimated states by reducing localization noise and providing smooth position, orientation, and velocity estimates. To improve robustness, the system incorporates runtime EKF parameter tuning, motion thresholding, residual analysis, latency measurement, and data logging for performance evaluation.
+	The framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco-based homography estimation, and YOLOv8 semantic segmentation for vehicle localization in world coordinates \cite{redmon2016yolo} An Extended Kalman Filter (EKF) refines the estimated states by reducing localization noise and providing smooth position, orientation, and velocity estimates. To improve robustness, the system incorporates runtime EKF parameter tuning, motion thresholding, residual analysis, latency measurement, and data logging for performance evaluation.
 	
 	\sidenote{\textbf{Main Contributions:} EKF-based tracking, velocity estimation, runtime EKF tuning, motion thresholding, residual analysis, latency evaluation, and bird's-eye-view vehicle localization.}
 	
