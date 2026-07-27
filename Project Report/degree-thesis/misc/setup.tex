@@ -138,8 +138,9 @@
 % inspired by https://anneurai.net/2017/10/18/thesis-formatting-in-latex/
 \usepackage[
   backend=biber,
-  style=alphabetic,
-  doi=false,isbn=false, % these fields are commonly omitted
+  style=ieee, % <-- changed from alphabetic
+  doi=true,isbn=false, % these fields are commonly omitted % <-- changed from false
+  url=true,  % <-- added this line
   terseinits=true, % no points between initials
   giveninits=true, % always print only initials for given names
   sortcites=true,
