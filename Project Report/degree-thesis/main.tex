@@ -158,22 +158,17 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-%\addchaptertocentry{\abstractname}
-% uncomment to add the abstract to the table of contents (not recommended)
-
-For an overview of this document, see \Cref{Chapter1}.
-
-Provide a Thesis Abstract here (length: less than one page).
-
-For a start, you may want to consult the concise instructions for writing the Summary Paragraph in \emph{Nature}: \url{https://www.nature.com/documents/nature-summary-paragraph.pdf}. Moreover, consider Markus Kuhn's advice on differentiating abstract and introduction: \url{https://www.lightbluetouchpaper.org/2007/03/14/how-not-to-write-an-abstract/}.
-
-A boilerplate scheme for an abstract is as follows: devote 25\,\% of the space on the purpose and importance of the research (introduction), 25\,\% of the space on what you did (methods), 35\,\% of the space on what you found (results), and 15\,\% of the space on the implications of the research (cf. \url{https://writingcenter.gmu.edu/guides/writing-an-abstract}).
-
-More concrete advice for writing abstracts can be found on the website of the Writing Center of the University of North Carolina at Chapel Hill (\url{https://writingcenter.unc.edu/tips-and-tools/abstracts/}). Some useful phrases for abstracts can be found at \url{http://dissertation.laerd.com/useful-phrases-when-writing-a-dissertation-abstract.php}
-
-Finally, you may also want to consider the excellent guide by Kent Beck on how to write good abstracts, which focuses on conference papers:
-\url{https://plg.uwaterloo.ca/~migod/research/beckOOPSLA.html}.
-
+	
+	Reliable vehicle localization is essential for miniature autonomous driving systems, where accurate perception enables motion analysis, trajectory planning, and closed-loop control. This paper presents a real-time bird's-eye-view vehicle detection and tracking framework using a single overhead fisheye camera. The proposed system combines computer vision and deep learning techniques to estimate the vehicle position, orientation, and velocity in real time.
+	
+	\sidenote{\textbf{Objective:} Develop a robust bird's-eye-view perception framework for real-time vehicle detection, localization, and tracking.}
+	
+	The framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco-based homography estimation, and YOLOv8 semantic segmentation for vehicle localization in world coordinates. An Extended Kalman Filter (EKF) refines the estimated states by reducing localization noise and providing smooth position, orientation, and velocity estimates. To improve robustness, the system incorporates runtime EKF parameter tuning, motion thresholding, residual analysis, latency measurement, and data logging for performance evaluation.
+	
+	\sidenote{\textbf{Main Contributions:} EKF-based tracking, velocity estimation, runtime EKF tuning, motion thresholding, residual analysis, latency evaluation, and bird's-eye-view vehicle localization.}
+	
+	Experimental results demonstrate stable and accurate real-time vehicle tracking with reduced measurement jitter and low processing latency. The proposed modular framework provides a scalable solution for infrastructure-based miniature autonomous driving and supports future extensions such as multi-vehicle tracking, sensor fusion, and autonomous navigation.
+	
 \end{abstract}
 
 
@@ -271,8 +266,8 @@ Finally, you may also want to consider the excellent guide by Kent Beck on how t
 % Uncomment the lines as you write the Appendices
 
 \include{appendices/appendixA}
-\include{appendices/appendixB}
-\include{appendices/appendixC}
+%\include{appendices/appendixB}
+%\include{appendices/appendixC}
 
 
 
