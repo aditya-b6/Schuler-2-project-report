@@ -1,6 +1,21 @@
 \chapter{Introduction}
 
-This chapter contains the introduction part of the report
+\label{Chapter1}
+
+Autonomous driving systems rely on accurate environmental perception to safely interpret their surroundings and make informed driving decisions. Reliable localization of surrounding vehicles is fundamental for tasks such as trajectory planning, collision avoidance, and motion control. Consequently, perception systems must provide accurate and consistent estimates of a vehicle's position and orientation while operating under real-time constraints.
+
+This chapter introduces the motivation behind the proposed work, defines the research problem, outlines the objectives and contributions of the project, and provides an overview of the remaining chapters.
+
+\section{Motivation}
+
+Autonomous driving research has highlighted the importance of robust perception systems through the development of standardized benchmark datasets and evaluation frameworks that enable reliable vehicle detection and localization in real-world scenarios \cite{geiger2012kitti}. These advances have significantly accelerated the development of computer vision techniques for intelligent transportation systems.
+
+For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget limitations. Infrastructure-based perception using a stationary overhead camera provides an attractive alternative by offering a global view of the driving environment while reducing onboard sensing requirements.
+
+\sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
+
+Despite these advantages, accurately estimating vehicle positions from overhead imagery remains challenging. Camera lens distortion, perspective transformation, measurement noise, and changing illumination conditions can degrade localization accuracy. Therefore, robust computer vision and state estimation techniques are required to transform image observations into reliable real-world vehicle trajectories suitable for autonomous driving applications.
+
 
 \section{Background}
 
