@@ -66,6 +66,8 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \input{misc/setup.tex} % Load the settings from Misc/setup.tex
 \input{misc/commands.tex} % Load the custom commands from Misc/commands.tex
 
+\usepackage{placeins}
+
 % Uncomment this command to make all links black:
 %   useful for printing on black-white printers that do a
 %   poor job at rasterizing colored text properly
@@ -161,7 +163,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 	
 	Reliable vehicle localization is essential for miniature autonomous driving systems, where accurate perception enables motion analysis, trajectory planning, and closed-loop control. This paper presents a real-time bird's-eye-view vehicle detection and tracking framework using a single overhead fisheye camera. The proposed system combines computer vision and deep learning techniques to estimate the vehicle position, orientation, and velocity in real time.
 	
-	\sidenote{\textbf{Objective:} Develop a robust bird's-eye-view perception framework for real-time vehicle detection, localization, and tracking.}
+	\sidenote{\textbf{Objective:} Develop a real-time bird's-eye-view perception framework for reliable vehicle localization and tracking.}
 	
 	The framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco-based homography estimation, and YOLOv8 semantic segmentation for vehicle localization in world coordinates \cite{redmon2016yolo} An Extended Kalman Filter (EKF) refines the estimated states by reducing localization noise and providing smooth position, orientation, and velocity estimates. To improve robustness, the system incorporates runtime EKF parameter tuning, motion thresholding, residual analysis, latency measurement, and data logging for performance evaluation.
 	
