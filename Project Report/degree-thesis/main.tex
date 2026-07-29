@@ -169,7 +169,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 	The proposed framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco marker-based homography estimation, and a custom-trained YOLOv8 instance segmentation model for vehicle sub-part detection in world coordinates \cite{redmon2016yolo}. The extracted image feature centroids (body, front, and rear) are transformed into metric world coordinates to estimate the vehicle pose, while an Extended Kalman Filter (EKF) utilizing a non-linear Constant Turn Rate and Velocity (CTRV) kinematic model refines the measured states by reducing localization noise and improving temporal consistency. To further enhance robustness, the system incorporates empirical EKF covariance tuning, confidence filtering, motion thresholding, residual analysis, and live visual debugging tools.%
 	\sidenote{\textbf{Main Contributions:} Vision-based vehicle localization using YOLOv8 segmentation, homography-based coordinate transformation, EKF state estimation with CTRV model, runtime optimization, and experimental residual analysis.}
 	
-	The proposed framework was implemented and experimentally validated on the ADMITi4 miniature autonomous driving platform under representative laboratory conditions. Experimental evaluations included offline end-to-end latency measurements (achieving an end-to-end latency below 250 ms), single- and multi-vehicle tracking scenarios, and performance evaluations across varying lighting and vehicle orientations. The results demonstrate reliable real-time vehicle localization with stable pose tracking and reduced measurement jitter. The developed modular framework provides a scalable foundation for future research in infrastructure-based autonomous driving, sensor fusion, and cooperative navigation.
+	The proposed framework was implemented and experimentally validated on the ADMIT14 miniature autonomous driving platform under representative laboratory conditions. Experimental evaluations included offline end-to-end latency measurements (achieving an end-to-end latency below 250 ms), single- and multi-vehicle tracking scenarios, and performance evaluations across varying lighting and vehicle orientations. The results demonstrate reliable real-time vehicle localization with stable pose tracking and reduced measurement jitter. The developed modular framework provides a scalable foundation for future research in infrastructure-based autonomous driving, sensor fusion, and cooperative navigation.
 	
 \end{abstract}
 
@@ -236,7 +236,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 
 \begin{description}
 	
-	\item[ADMITi4] Automated Driving in MIniaturized Traffic environments scale 1:14
+	\item[ADMIT14] Automated Driving in Miniaturized Traffic environments scale 1:14
 	\item[ArUCo] Augmented Reality University of Córdoba Marker
 	\item[BEV] Bird's-Eye View
 	\item[CNN] Convolutional Neural Network

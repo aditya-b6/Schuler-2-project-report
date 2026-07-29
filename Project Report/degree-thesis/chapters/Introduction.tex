@@ -11,9 +11,7 @@ This chapter presents the motivation for the project, defines the problem statem
 
 Autonomous driving research has highlighted the importance of robust perception systems through the development of standardized benchmark datasets and evaluation frameworks that have enabled the evaluation and comparison of vehicle detection and localization algorithms in real-world scenarios \cite{geiger2012kitti}. These advances have significantly accelerated the development of computer vision techniques for intelligent transportation systems.
 
-For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget limitations. Infrastructure-based perception using a stationary overhead camera provides an attractive alternative by offering a global view of the driving environment while reducing onboard sensing requirements.
-
-\sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
+For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget limitations. Infrastructure-based perception using a stationary overhead camera provides an attractive alternative by offering a global view of the driving environment while reducing onboard sensing requirements.\sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
 
 Despite these advantages, accurately estimating vehicle position and orientation from overhead imagery remains challenging. Wide-angle fisheye lens distortion, perspective distortion, segmentation uncertainty, and measurement noise can degrade localization accuracy. Therefore, integrating robust deep-learning vision models with recursive state estimation techniques is essential for transforming raw, noisy image observations into smooth and reliable real-world vehicle trajectories.
 
@@ -44,32 +42,3 @@ The main contributions of this project are summarized as follows:
 	\item Experimental evaluation of the proposed framework through localization performance, latency, vehicle velocity, and residual analysis using real-time visualization tools.
 \end{itemize}
 
-
-\section{Report Organization}
-
-The remainder of this report is organized as follows:
-
-\begin{itemize}
-	
-	\item \textbf{\hyperref[chap:systemoverview]{Chapter~2 -- System Overview}:}
-	Presents the overall system workflow and logical architecture of the proposed vehicle localization framework, describing the complete processing pipeline from image acquisition to state estimation.
-	
-	\item \textbf{\hyperref[chap:vision]{Chapter~3 -- Vision-Based Vehicle Detection, Localization, and Pose Estimation Framework}:}
-	Describes the complete vision-based localization pipeline, including camera calibration, YOLOv8 instance segmentation, ArUco marker-based homography transformation, vehicle pose estimation, and the real-time software implementation.
-	
-	\item \textbf{\hyperref[chap:experiments]{Chapter~4 -- Experimental Results and Measurement Campaigns}:}
-	Presents the experimental validation of the proposed framework through latency measurements, single- and multi-vehicle localization experiments, relative vehicle localization, and robustness evaluations.
-	
-	\item \textbf{\hyperref[chap:ekf]{Chapter~5 -- Implementation of Extended Kalman Filter}:}
-	Introduces the Extended Kalman Filter, the non-linear CTRV vehicle motion model, covariance matrix tuning, and the evaluation of filtering performance.
-	
-	\item \textbf{\hyperref[chap:optimizations]{Chapter~6 -- Code Optimizations and Functional Improvements}:}
-	Discusses software optimizations, execution-time improvements, and enhancements to the localization and pose estimation framework.
-	
-	\item \textbf{\hyperref[chap:conclusion]{Chapter~7 -- Conclusion}:}
-	Summarizes the main achievements of the project, highlights the key experimental findings, and discusses the overall contributions of the proposed localization framework.
-	
-	\item \textbf{\hyperref[chap:futurescope]{Chapter~8 -- Future Scope of Work}:}
-	Outlines possible future extensions of the proposed system, including algorithmic improvements, sensor integration, and broader applications for autonomous driving research.
-	
-\end{itemize}
