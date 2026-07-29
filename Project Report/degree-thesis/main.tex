@@ -46,7 +46,7 @@ english, % replace with ngerman for German; not fully supported so far -- requir
 singlespacing, % Single line spacing (recommended), alternatives: onehalfspacing or doublespacing
 %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
 %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
-%liststotoc, % Uncomment to add list of figures/tables/etc to table of contents (not recommended)
+liststotoc, % Uncomment to add list of figures/tables/etc to table of contents (not recommended)
 %toctotoc, % Uncomment to add the main table of contents to the table of contents (not recommended)
 parskip, % add space between paragraphs (recommended)
 nohyperref, % do not load the hyperref package (is loaded in setup.tex)
@@ -206,13 +206,12 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \hypersetup{linkcolor=black}
 \tableofcontents % Prints the ToC entries
 }
-\restoregeometry
 
 %----------------------------------------------------------
 % List of Figures
 %----------------------------------------------------------
 
-\cleardoublepage
+\let\cleardoublepage\clearpage
 \phantomsection
 %\addchap{List of Figures}
 \listoffigures
@@ -221,7 +220,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 % List of Tables
 %----------------------------------------------------------
 
-\cleardoublepage
+\let\cleardoublepage\clearpage
 \phantomsection
 %\addchap{List of Tables}
 \listoftables
@@ -234,26 +233,24 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \phantomsection
 \addchap{List of Abbreviations}
 
-\begin{description}
-	
-	\item[ADMITi4] Automated Driving in MIniaturized Traffic environments scale 1:14
-	\item[ArUCo] Augmented Reality University of Córdoba Marker
-	\item[BEV] Bird's-Eye View
-	\item[CNN] Convolutional Neural Network
-	\item[CTRV] Constant Turn Rate and Velocity
-	\item[EKF] Extended Kalman Filter
-	\item[FPS] Frames Per Second
-	\item[GUI] Graphical User Interface
-	\item[IP] Internet Protocol
-	\item[LiDAR] Light Detection and Ranging
-	\item[ROI] Region of Interest
-	\item[RTSP] Real-Time Streaming Protocol
-	\item[UAV] Unmanned Aerial Vehicle
-	\item[YOLO] You Only Look Once
-	
-\end{description}
+\begin{tabular}{@{} p{3cm} l @{}}
+	\textbf{ArUCo}   & Augmented Reality University of Córdoba Marker \\
+	\textbf{BEV}     & Bird's-Eye View \\
+	\textbf{CNN}     & Convolutional Neural Network \\
+	\textbf{CTRV}    & Constant Turn Rate and Velocity \\
+	\textbf{EKF}     & Extended Kalman Filter \\
+	\textbf{FPS}     & Frames Per Second \\
+	\textbf{GUI}     & Graphical User Interface \\
+	\textbf{IP}      & Internet Protocol \\
+	\textbf{LiDAR}   & Light Detection and Ranging \\
+	\textbf{ROI}     & Region of Interest \\
+	\textbf{RTSP}    & Real-Time Streaming Protocol \\
+	\textbf{UAV}     & Unmanned Aerial Vehicle \\
+	\textbf{YOLO}    & You Only Look Once \\
+\end{tabular}
 
 \cleardoublepage
+\restoregeometry
 %----------------------------------------------------------------------------------------
 %	DEDICATION
 %----------------------------------------------------------------------------------------
