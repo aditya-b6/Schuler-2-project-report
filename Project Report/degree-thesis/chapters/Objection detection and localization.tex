@@ -1,3 +1,203 @@
-\chapter{Object Detection and localization}
+\chapter{Vision-Based Vehicle Detection, Localization, and Pose Estimation Framework}
 
-this contains the info for xyz
+\section{Vision-Based Vehicle Detection, Localization and Pose Estimation Framework}
+
+Reliable vehicle localization is a fundamental requirement for autonomous navigation, enabling continuous estimation of a vehicle's position and orientation within its operating environment. Unlike conventional localization approaches that rely on expensive sensors such as LiDAR, RTK-GPS, or multiple synchronized cameras, the proposed framework employs a single overhead monocular camera combined with deep learning and geometric computer vision techniques, providing a cost-effective and scalable solution for structured indoor environments. \cite{hartley2004multiple, bradski2008learningopencv}
+
+\begin{wrapfigure}{l}{0.42\textwidth}
+	\centering
+	\vspace{-10pt}
+	\includegraphics[width=0.36\textwidth]{figure3.1}
+	\caption{Overview of the proposed vision-based vehicle detection, localization, and pose estimation framework.}
+	\label{fig:framework_overview}
+	\vspace{-10pt}
+\end{wrapfigure}
+
+Figure~\ref{fig:framework_overview} illustrates the overall perception pipeline. Images acquired from an overhead RTSP camera are rectified and processed using a custom-trained YOLOv8 instance segmentation network to detect the vehicle body together with dedicated front and rear semantic regions. \cite{jocher2023ultralytics}
+
+The segmentation masks are converted into centroid feature points, while ArUCo fiducial markers establish the global reference frame. A planar homography transforms the extracted image-space features into metric world coordinates for vehicle localization. \cite{garrido2014automatic, zhang2000flexible}
+
+The transformed feature points are used to estimate the complete planar vehicle pose, where the body centroid defines the vehicle position and the front and rear centroids determine the heading direction. These pose measurements serve as the input to the Extended Kalman Filter presented in Chapter~5 for robust temporal filtering.
+
+The framework was implemented in Python using OpenCV and the Ultralytics implementation of YOLOv8. Image acquisition, segmentation, marker detection, coordinate transformation, and pose estimation operate continuously within a unified real-time pipeline on the ADMITi4 experimental platform.
+
+\section{Vehicle Detection and Feature Extraction}
+
+The first stage of the proposed localization framework detects the vehicle in the overhead camera image and extracts the geometric features required for localization. Unlike conventional object detectors that predict only bounding boxes, the proposed approach employs instance segmentation to obtain pixel-level representations of the vehicle, enabling robust feature extraction under varying vehicle orientations and illumination conditions.
+
+Prior to segmentation, each acquired image is rectified using the intrinsic camera calibration parameters to compensate for lens distortion and preserve the geometric consistency of the scene.
+
+The rectified image is processed using a custom-trained YOLOv8 instance segmentation network implemented through the Ultralytics framework \cite{jocher2023ultralytics}. The network predicts three semantic regions corresponding to the vehicle body, front, and rear, as illustrated in Figure~\ref{fig:detection_pose}(a). These segmented regions provide the feature points required for subsequent pose estimation, shown in Figure~\ref{fig:detection_pose}(b).
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figure3.2}
+	\caption{Vision-based vehicle detection and pose estimation process. (a) Vehicle detection and feature extraction using the proposed YOLOv8 instance segmentation network, including semantic segmentation, binary mask generation, and centroid extraction. (b) Vehicle pose estimation using the extracted body, front, and rear centroids to determine the vehicle position and heading angle.}
+	\label{fig:detection_pose}
+\end{figure}
+
+Each segmented region is converted into a representative geometric feature through centroid extraction.
+
+\marginpar{\footnotesize\textbf{Centroid}\\[2mm]
+	The centroid represents the geometric center of a segmented object computed from its image moments. Since it considers all pixels belonging to the segmented region, it provides a stable feature point that is less sensitive to segmentation noise than individual boundary points.}
+
+The centroid of each segmented region is computed using the first-order image moments,
+
+\begin{equation}
+	\mathbf{c}=
+	\begin{bmatrix}
+		c_x\\
+		c_y
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\dfrac{M_{10}}{M_{00}}\\[2mm]
+		\dfrac{M_{01}}{M_{00}}
+	\end{bmatrix},
+	\label{eq:centroid}
+\end{equation}
+
+where $M_{00}$ denotes the segmented region area, while $M_{10}$ and $M_{01}$ represent the corresponding first-order spatial moments. The body centroid estimates the vehicle position, whereas the front and rear centroids define the feature points required for orientation estimation.
+
+The resulting image-space feature points are transformed into a globally referenced coordinate system in the following section.
+
+\section{Marker-Based Vehicle Localization}
+
+The vehicle feature points extracted in the previous section are represented in image coordinates and therefore require a geometric transformation to determine the physical vehicle position within the experimental environment.
+
+To achieve this transformation, the proposed framework employs ArUCo fiducial markers positioned at predefined locations around the experimental test track \cite{garrido2014automatic}. Their known physical locations establish a fixed global reference frame and enable reliable localization under varying illumination conditions.
+
+\marginpar{\footnotesize\textbf{ArUCo Markers}\\[2mm]
+	ArUCo markers are square binary fiducial markers with unique identification patterns. Their known physical positions enable reliable camera localization and establish a fixed global coordinate system for geometric transformations.}
+
+For each acquired image, the detected marker corners are associated with their corresponding world coordinates to compute a planar homography relating the image and ground planes.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figure3.3}
+	\caption{Image-to-world coordinate transformation using ArUCo fiducial markers and planar homography. Known marker correspondences establish the global reference frame, enabling vehicle feature points extracted in image coordinates to be transformed into metric world coordinates.}
+	\label{fig:homography}
+\end{figure}
+
+The transformation is expressed as
+
+\begin{equation}
+	\lambda
+	\begin{bmatrix}
+		X\\
+		Y\\
+		1
+	\end{bmatrix}
+	=
+	\mathbf{H}
+	\begin{bmatrix}
+		u\\
+		v\\
+		1
+	\end{bmatrix},
+	\label{eq:homography}
+\end{equation}
+
+where $(u,v)$ denote the image coordinates, $(X,Y)$ represent the corresponding world coordinates, $\mathbf{H}$ is the homography matrix, and $\lambda$ is the projective scale factor.
+
+\marginpar{\footnotesize\textbf{Homography}\\[2mm]
+	A homography is a projective transformation that maps points between two planar surfaces. Since both the camera and the experimental ground plane remain fixed, the same homography matrix can be reused for all incoming frames after system initialization.}
+
+Since the overhead camera and ArUCo markers remain fixed throughout the experiments, the homography matrix is computed once during system initialization and reused for all subsequent frames, reducing computational overhead while maintaining accurate localization performance. \cite{hartley2004multiple}
+
+The extracted centroid coordinates are then transformed into metric world coordinates, providing the globally referenced feature points required for vehicle pose estimation in the following section. \cite{zhang2000flexible}
+
+\section{Vehicle Pose and Orientation Estimation}
+
+Following the homography transformation, the extracted vehicle feature points are represented in the global coordinate system, providing the basis for estimating the complete planar vehicle pose.
+
+The vehicle position is represented by the centroid of the segmented vehicle body, which provides a stable geometric reference that is less sensitive to segmentation irregularities and partial occlusions. The vehicle position is expressed as
+
+\begin{equation}
+	\mathbf{P}_{Body}=
+	\begin{bmatrix}
+		x\\
+		y
+	\end{bmatrix},
+	\label{eq:vehicle_position}
+\end{equation}
+
+where $x$ and $y$ denote the Cartesian coordinates of the vehicle body centroid in the global reference frame.
+
+\marginpar{\footnotesize\textbf{Vehicle Position}\\[2mm]
+	The body centroid represents the translational component of the vehicle pose. Because it is computed from the complete vehicle mask, it provides a robust estimate of the vehicle location even under small segmentation inaccuracies.}
+
+The vehicle orientation is estimated from the transformed front and rear centroids, which define the longitudinal axis and heading direction of the vehicle, as illustrated in Figure~\ref{fig:detection_pose}(b).
+
+The heading vector is computed from the rear centroid towards the front centroid as
+
+\begin{equation}
+	\mathbf{v}
+	=
+	\mathbf{P}_{Front}
+	-
+	\mathbf{P}_{Rear},
+	\label{eq:heading_vector}
+\end{equation}
+
+where $\mathbf{P}_{Front}$ and $\mathbf{P}_{Rear}$ denote the transformed world coordinates of the front and rear centroids, respectively.
+
+The vehicle orientation is obtained using the four-quadrant inverse tangent function,
+
+\begin{equation}
+	\theta
+	=
+	\operatorname{atan2}(v_y,v_x),
+	\label{eq:heading}
+\end{equation}
+
+where $v_x$ and $v_y$ are the horizontal and vertical components of the heading vector.
+
+\marginpar{\footnotesize\textbf{atan2 Function}\\[2mm]
+	Unlike the conventional inverse tangent, $\operatorname{atan2}(\cdot)$ considers the signs of both vector components, providing a unique orientation over the complete angular range of $(-\pi,\pi]$.}
+
+Combining the vehicle position and orientation yields the complete planar pose,
+
+\begin{equation}
+	\mathbf{P}
+	=
+	\begin{bmatrix}
+		x\\
+		y\\
+		\theta
+	\end{bmatrix},
+	\label{eq:vehicle_pose}
+\end{equation}
+
+where $(x,y)$ denotes the vehicle position and $\theta$ the heading angle measured with respect to the positive global $X$-axis. \cite{hartley2004multiple, bradski2008learningopencv}
+
+The estimated pose is computed for every incoming image frame and serves as the measurement input to the Extended Kalman Filter presented in Chapter~4, where temporal filtering is applied to obtain a smooth and robust vehicle trajectory.
+
+\section{Real-Time Framework Implementation}
+
+\begin{wrapfigure}{l}{0.50\textwidth}
+	\centering
+	\vspace{-10pt}
+	\includegraphics[width=0.36\textwidth]{figure3.4}
+	\caption{Software architecture of the proposed real-time vision-based localization framework.}
+	\label{fig:software_architecture}
+	\vspace{-10pt}
+\end{wrapfigure}
+
+The proposed vision-based localization framework was implemented as a modular real-time perception system in Python using OpenCV and the Ultralytics implementation of the YOLOv8 instance segmentation network. Figure~\ref{fig:software_architecture} illustrates the overall software architecture.
+
+Image acquisition is performed through a Real-Time Streaming Protocol (RTSP) connection to the overhead IP camera. A dedicated acquisition thread continuously retrieves the latest camera frames and stores them in a shared image buffer, enabling stable real-time operation by decoupling image acquisition from processing.
+
+Each incoming frame is rectified using the intrinsic camera calibration parameters before being processed by the YOLOv8 instance segmentation network. The resulting segmentation masks are converted into centroid feature points, while ArUCo markers establish the global reference frame. The extracted feature points are then transformed into world coordinates using the precomputed homography matrix to estimate the vehicle position and orientation.
+
+The complete pipeline operates automatically on every incoming frame. Intermediate outputs, including segmentation masks, marker detections, and localization results, are visualized in real time, while the estimated vehicle pose is simultaneously transmitted to the Extended Kalman Filter.
+
+The modular architecture enables individual processing stages to operate independently while exchanging only the geometric information required by subsequent modules, simplifying future algorithmic improvements and allowing individual components to be replaced without affecting the remaining framework. \cite{jocher2023ultralytics, bradski2008learningopencv}
+
+\section{Chapter Summary}
+
+This chapter presented the proposed vision-based vehicle detection, localization, and pose estimation framework developed for the ADMITi4 autonomous driving platform. The framework integrates camera calibration, YOLOv8 instance segmentation, marker-based localization, and geometric pose estimation into a unified real-time perception pipeline.
+
+A custom-trained YOLOv8 instance segmentation network was used to detect the vehicle body together with dedicated front and rear semantic regions. Centroids extracted from these segmented regions were transformed from image coordinates into metric world coordinates using ArUCo fiducial markers and a planar homography, enabling continuous estimation of the vehicle position and orientation.
+
+The framework was implemented as a modular real-time system for vision-based vehicle localization under structured indoor conditions. While the estimated pose provides accurate localization, it remains affected by measurement noise and uncertainty. To improve robustness and temporal consistency, the next chapter presents an Extended Kalman Filter (EKF) that combines these measurements with a vehicle motion model to obtain a smooth and reliable state estimate.

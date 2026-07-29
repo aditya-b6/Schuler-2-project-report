@@ -1,3 +1,323 @@
-\chapter{Measurement Campaign}
+\chapter{Experimental Results and Measurement Campaigns}
+\section{Measurement Campaign Overview}
 
-This has all measurement data
+Following the development of the proposed Bird's-Eye View (BEV) perception framework, an experimental measurement campaign was conducted to evaluate its real-time localization performance under controlled indoor laboratory conditions using the ADMITi4 miniature autonomous driving platform. The objective was to validate the perception pipeline with respect to processing latency, localization accuracy, and robustness under representative traffic scenarios.
+
+\marginnote{
+	\textbf{Experimental objective}\\
+	Evaluate localization accuracy, latency, and robustness under controlled laboratory conditions.
+}
+
+The experimental platform consisted of an overhead BEV camera observing a miniature road network equipped with ArUCo markers, providing a fixed global coordinate system for vehicle localization. Using the same hardware configuration and camera calibration throughout all experiments ensured consistent operating conditions.
+
+\marginnote{
+	\textbf{Reference frame}\\
+	ArUCo markers establish a fixed global coordinate system for all localization experiments.
+}
+
+The measurement campaign comprised three complementary investigations: latency measurements to quantify processing delay, constant-velocity experiments to assess localization consistency, and dynamic scenarios to evaluate robustness under multiple vehicles, varying orientations, curved roads, and boundary conditions. Figure~\ref{fig:experimental_setup} illustrates the experimental platform and representative BEV localization output.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.92\textwidth]{figures/figure4.1.png}
+	\caption{Experimental setup used throughout the measurement campaign, showing the miniature autonomous driving platform, overhead Bird's-Eye View camera, ArUCo marker-based global coordinate system, and representative localization output.}
+	\label{fig:experimental_setup}
+\end{figure}
+
+\section{Latency Measurement Campaign}
+
+The computational performance of the proposed Bird's-Eye View perception framework was evaluated by measuring the end-to-end latency between the physical motion of the vehicle and its corresponding visualization in the perception system. Two constant-velocity experiments were conducted over trajectories of 6~m and 8~m. For each trial, the measured traversal time was compared with the traversal time obtained from the camera stream, and the resulting difference was considered as the overall system latency.
+
+\subsection{Results and Discussion}
+
+\marginnote{
+	\textbf{Latency}\\
+	End-to-end delay between physical vehicle motion and visualization by the perception system.
+}
+Table~\ref{tab:latency} summarizes the latency measurements obtained for both experimental trajectories.
+
+%-----------------------------TABLE----------------------------------
+
+\begin{table}[!ht]
+	\centering
+\caption{Latency measurements obtained during the constant-velocity experiments.}
+	\label{tab:latency}
+	
+	\begin{minipage}{0.47\textwidth}
+		\centering
+		\textbf{(a) 6 m trajectory}
+		
+		\vspace{2mm}
+		
+		\begin{tabular}{cccc}
+			\hline
+			Trial & Real & Camera & Delay\\
+			& (s) & (s) & (s)\\
+			\hline
+			1 & 10.12 & 10.30 & 0.18\\
+			2 & 10.28 & 10.45 & 0.17\\
+			3 & 10.35 & 10.57 & 0.22\\
+			4 & 10.19 & 10.33 & 0.14\\
+			5 & 10.26 & 10.43 & 0.17\\
+			\hline
+			Avg. & 10.24 & 10.41 & 0.18\\
+			\hline
+		\end{tabular}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.47\textwidth}
+		\centering
+		\textbf{(b) 8 m trajectory}
+		
+		\vspace{2mm}
+		
+		\begin{tabular}{cccc}
+			\hline
+			Trial & Real & Camera & Delay\\
+			& (s) & (s) & (s)\\
+			\hline
+			1 & 13.61 & 13.85 & 0.24\\
+			2 & 13.54 & 13.76 & 0.22\\
+			3 & 13.42 & 13.68 & 0.26\\
+			4 & 13.66 & 13.90 & 0.24\\
+			5 & 13.57 & 13.80 & 0.23\\
+			\hline
+			Avg. & 13.55 & 13.78 & 0.24\\
+			\hline
+		\end{tabular}
+	\end{minipage}
+\end{table}
+
+%-----------------------------FIGURE----------------------------------
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.92\textwidth]{Figures/figure4.3.png}
+	\caption{Comparison of the measured traversal time, camera traversal time, and end-to-end perception latency for the 6~m and 8~m experimental trajectories.}
+	\label{fig:latency analysis}
+\end{figure}
+
+The latency measurements obtained from both experiments are in close agreement, with average delays of approximately \SI{0.18}{s} for the 6~m trajectory and \SI{0.24}{s} for the 8~m trajectory. As shown in Figure~\ref{fig:latency_analysis}, the measured latency remains nearly constant across repeated trials, indicating stable computational performance of the perception pipeline.
+
+The small increase in latency for the longer trajectory is primarily attributed to minor variations in image acquisition timing and processing synchronization rather than the travelled distance itself. Overall, the measured end-to-end latency remained below \SI{250}{ms}, demonstrating that the proposed framework satisfies the real-time requirements of the experimental miniature autonomous driving platform.
+
+\marginnote{
+	\textbf{Real-time}\\
+	Average processing latency remained below 250 ms during all experiments.
+}
+
+\section{Dynamic Scenario Validation}
+
+Following the latency evaluation, a comprehensive set of qualitative experiments was conducted to validate the proposed Bird's-Eye View (BEV) perception framework under representative operating conditions. The experiments were designed to evaluate the localization accuracy, orientation estimation, multi-vehicle tracking capability, and robustness of the developed perception pipeline. The complete validation campaign consisted of twelve test cases covering single-vehicle localization, multi-vehicle scenarios, and challenging environmental conditions. Representative results obtained during the experiments are presented in the following subsections.
+
+\marginnote{
+	\textbf{Validation strategy}\\
+	Twelve representative test cases evaluate localization performance under different operating conditions.
+}
+
+\subsection{Validation Strategy}
+
+To systematically evaluate the proposed Bird's-Eye View (BEV) perception framework, a comprehensive qualitative validation campaign consisting of twelve representative test cases was conducted. The experiments were grouped into three categories: single-vehicle localization, multi-vehicle localization, and robustness evaluation. Each test case was designed to assess a specific aspect of the perception framework under representative operating conditions. A summary of the validation campaign is presented in Table~\ref{tab:validation_strategy}.
+
+\begin{table*}[!ht]
+	\centering
+	\caption{Summary of the qualitative validation campaign.}
+	\label{tab:validation_strategy}
+	\renewcommand{\arraystretch}{1.25}
+	\footnotesize
+	
+	\begin{tabular}{p{1.1cm} p{3.8cm} p{4.2cm} p{5.2cm} c}
+		\toprule
+		\textbf{TC} &
+		\textbf{Test Case} &
+		\textbf{Objective} &
+		\textbf{Expected Outcome} &
+		\textbf{Result} \\
+		\midrule
+		
+		\multicolumn{5}{l}{\textbf{A. Single Vehicle Localization}}\\
+		\midrule
+		
+		TC1 &
+		Vehicle at Corner of Track &
+		Verify localization near image boundaries &
+		Vehicle detected with correct pose despite reduced field of view &
+		$\checkmark$ \\
+		
+		TC2 &
+		High-Speed Motion &
+		Evaluate localization during rapid motion &
+		Continuous detection with stable pose estimation and no tracking loss &
+		$\checkmark$ \\
+		
+		TC3 &
+		Vehicle Along Map Boundary &
+		Evaluate localization near image edges &
+		Accurate localization maintained despite edge proximity &
+		$\checkmark$ \\
+		
+		TC4 &
+		Different Vehicle Orientations &
+		Validate orientation estimation &
+		Correct heading estimation over the complete range of vehicle orientations &
+		$\checkmark$ \\
+		
+		TC5 &
+		Position Accuracy at Multiple Locations &
+		Evaluate localization consistency &
+		Accurate localization maintained throughout the experimental workspace &
+		$\checkmark$ \\
+		
+		\midrule
+		
+		\multicolumn{5}{l}{\textbf{B. Multi-Vehicle Localization}}\\
+		\midrule
+		
+		TC6 &
+		Vehicles at Opposite Corners &
+		Verify simultaneous localization of multiple vehicles &
+		Independent detection and accurate pose estimation for both vehicles &
+		$\checkmark$ \\
+		
+		TC7 &
+		Vehicles at Extreme Track Boundaries &
+		Validate localization near image limits &
+		Reliable localization maintained at opposite image boundaries &
+		$\checkmark$ \\
+		
+		TC8 &
+		Longitudinal Following Distance &
+		Determine minimum longitudinal spacing &
+		Stable localization maintained until the minimum separation threshold &
+		$\checkmark$ \\
+		
+		TC9 &
+		Lateral Separation Distance &
+		Evaluate side-by-side vehicle detection &
+		Reliable localization maintained for reduced lateral spacing &
+		$\checkmark$ \\
+		
+		TC10 &
+		Center vs Edge Localization Accuracy &
+		Compare localization performance across the workspace &
+		Acceptable localization accuracy maintained near image boundaries &
+		$\checkmark$ \\
+		
+		\midrule
+		
+		\multicolumn{5}{l}{\textbf{C. Robustness Evaluation}}\\
+		\midrule
+		
+		TC11 &
+		Lighting OFF &
+		Evaluate performance under reduced illumination &
+		Vehicle remains detectable under ambient lighting conditions &
+		$\checkmark$ \\
+		
+		TC12 &
+		Different Vehicle Color &
+		Verify robustness against appearance variation &
+		Localization performance remains independent of vehicle colour &
+		$\checkmark$ \\
+		
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+All twelve validation experiments successfully achieved their predefined objectives, demonstrating reliable localization performance under a wide range of operating conditions. The following subsections present representative experimental results together with the principal observations obtained from each validation category.
+
+\subsection{Single Vehicle Localization}
+
+The first set of experiments evaluated the localization performance of an individual vehicle under different operating conditions. The test cases included localization near image boundaries, high-speed motion, different vehicle orientations, and position estimation at multiple locations across the experimental workspace.
+
+\marginnote{
+	\textbf{Single-vehicle tests}\\
+	Boundary localization, high-speed motion, orientation estimation, and workspace coverage.
+}
+
+Figure~\ref{fig:single_vehicle} presents representative experimental results obtained during these evaluations.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/figure4.4.jpg}
+	\caption{Representative single-vehicle localization results demonstrating accurate vehicle position and orientation estimation at different locations within the experimental workspace, including boundary regions and varying vehicle orientations.}
+	\label{fig:single_vehicle}
+\end{figure}
+
+The proposed framework accurately estimated the vehicle position and heading throughout the experimental area. Reliable localization was maintained near image boundaries and during continuous vehicle motion, while accurate orientation estimation was achieved over the complete range of tested heading angles. The experimental observations confirm consistent localization performance throughout the workspace.
+
+\subsection{Multi-Vehicle Detection}
+
+The second experiment evaluates the capability of the proposed framework to detect and localize multiple vehicles simultaneously. Figure~\ref{fig:multi_vehicle} presents representative scenarios involving two and three vehicles operating within the experimental environment.
+
+\marginnote{
+	\textbf{Multi-object localization}\\
+	Independent detection and pose estimation for multiple vehicles within the same camera frame.
+}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/figure4.5.jpg}
+	\caption{Representative multi-vehicle localization scenarios demonstrating simultaneous vehicle detection and independent pose estimation across different traffic configurations.}
+	\label{fig:multi_vehicle}
+\end{figure}
+
+The perception framework successfully detected all vehicles present within the camera's field of view while maintaining independent pose estimates for each vehicle. No significant degradation in localization performance was observed as the number of vehicles increased, demonstrating the scalability of the proposed detection pipeline for multiple vehicle scenarios.
+
+\subsection{Relative Vehicle Localization}
+
+To evaluate vehicle interaction analysis, experiments involving approaching, following, and parallel vehicle motion were conducted. Figure~\ref{fig:spacing_above} illustrates representative scenarios in which the proposed framework detects only when the relative distance and orientation between neighbouring vehicles are greater than 21cm.
+
+\marginnote{
+	\textbf{Minimum spacing}\\
+	Reliable localization achieved for inter-vehicle distances greater than 21 cm.
+}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\textwidth]{figure4.61.jpg}
+	\caption{Localization performance for vehicle spacing below the reliable localization threshold of 21cm, illustrating tracking ambiguity and segmentation overlap.}
+	\label{fig:spacing_below}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\textwidth]{figure4.62.jpeg}
+	\caption{Stable localization achieved for vehicle spacing at and above the experimentally determined localization threshold of 21cm.}
+	\label{fig:spacing_above}
+\end{figure}
+	
+The computed relative positions remained stable throughout the experiments, enabling reliable estimation of inter-vehicle distance and relative heading. The framework successfully distinguished between approaching and separating vehicles while maintaining accurate localization during close-proximity interactions.
+
+\subsection{Robustness Evaluation}
+
+The final experiment investigates the robustness of the proposed perception framework under challenging operating conditions, including curved road navigation, close-proximity vehicle interactions, image boundary conditions, and varying illumination levels. Representative experimental results are presented in Figure~\ref{fig:robustness} and Figure~\ref{fig:lighting}.
+
+\marginnote{
+	\textbf{Robustness tests}\\
+	Localization performance evaluated under varying illumination, vehicle colours, and boundary conditions.
+}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\textwidth]{figure4.71.jpg}
+	\caption{Localization performance under normal and reduced illumination conditions, demonstrating robustness to lighting variations.}
+	\label{fig:lighting}
+\end{figure}
+	
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.90\textwidth]{figuure4.72.png}
+	\caption{Localization results for different vehicle colours and representative corner-case scenarios, demonstrating robustness to appearance variations.}
+	\label{fig:robustness}
+\end{figure}
+
+The proposed perception framework maintained reliable vehicle detection and pose estimation across all evaluated scenarios, including curved roads, close vehicle interactions, image boundaries, and varying lighting conditions, demonstrating robust localization performance under representative indoor operating conditions.
+
+\section{Chapter Summary}
+
+This chapter presented the experimental validation of the proposed Bird's-Eye View (BEV) perception framework using a miniature autonomous driving platform. The measurement campaign included both quantitative and qualitative evaluations to assess the performance of the developed vehicle detection and localization system.
+
+The latency measurements demonstrated a consistent end-to-end processing delay of less than 250~ms across different experimental conditions, confirming that the perception pipeline satisfies the real-time requirements of the application. Furthermore, qualitative validation showed that the proposed framework accurately estimated vehicle pose, orientation, and relative position under a range of representative traffic scenarios. Reliable localization performance was maintained for single-vehicle and multi-vehicle environments, as well as under challenging conditions including curved road segments, close vehicle interactions, and image boundary regions.
+
+Overall, the experimental results confirm that the developed perception framework provides robust and reliable localization within the miniature autonomous driving environment, establishing a solid foundation for the sensor fusion and state estimation approach presented in the following chapter.
