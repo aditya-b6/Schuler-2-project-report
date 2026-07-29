@@ -66,6 +66,8 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \input{misc/setup.tex} % Load the settings from Misc/setup.tex
 \input{misc/commands.tex} % Load the custom commands from Misc/commands.tex
 % ---------- Packages for Chapter 4 ----------
+\usepackage{placeins}
+\usepackage{changepage}  % add this in your preamble if not already present
 \usepackage{wrapfig}
 % Uncomment this command to make all links black:
 %   useful for printing on black-white printers that do a
@@ -113,7 +115,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 % International Software Systems Science
 % Software Systems Science
 % Education in Business and Information Systems
-\faculty{To Prof. Ralph Schüler \\ \href{https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng}{Faculty of Mobility Technology}}
+\faculty{Under Guidance of Prof. Ralf Schüler \\ \href{https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng}{Faculty of Mobility Technology}}
 
 % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 \addresses{address not used}
@@ -142,7 +144,6 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 
 \hypersetup{urlcolor=ubblue80}
 
-
 %----------------------------------------------------------------------------------------
 %	QUOTATION
 %----------------------------------------------------------------------------------------
@@ -162,7 +163,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 	
 	Reliable vehicle localization is essential for miniature autonomous driving systems, where accurate perception enables motion analysis, trajectory planning, and closed-loop control. This paper presents a real-time bird's-eye-view vehicle detection and tracking framework using a single overhead fisheye camera. The proposed system combines computer vision and deep learning techniques to estimate the vehicle position, orientation, and velocity in real time.
 	
-	\sidenote{\textbf{Objective:} Develop a robust bird's-eye-view perception framework for real-time vehicle detection, localization, and tracking.}
+	\sidenote{\textbf{Objective:} Develop a real-time bird's-eye-view perception framework for reliable vehicle localization and tracking.}
 	
 	The framework integrates threaded image acquisition, fisheye camera calibration, image undistortion, ArUco-based homography estimation, and YOLOv8 semantic segmentation for vehicle localization in world coordinates \cite{redmon2016yolo} An Extended Kalman Filter (EKF) refines the estimated states by reducing localization noise and providing smooth position, orientation, and velocity estimates. To improve robustness, the system incorporates runtime EKF parameter tuning, motion thresholding, residual analysis, latency measurement, and data logging for performance evaluation.
 	
@@ -243,7 +244,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \input{chapters/System Overview}
 \input{chapters/Objection detection and localization}
 \input{chapters/Measurement Campaigns}
-\input{chapters/EKF Implementation with code optimizations}
+\input{chapters/Implementation of Extended Kalmann Filter}
 %\input{chapters/chapter3.tex}
 %\input{chapters/chapter4.tex}
 %\input{chapters/chapter5.tex}

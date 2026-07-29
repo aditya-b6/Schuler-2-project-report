@@ -2,25 +2,45 @@
 
 \label{Chapter1}
 
-Autonomous driving systems rely on accurate environmental perception to safely interpret their surroundings and make informed driving decisions. Reliable localization of surrounding vehicles is fundamental for tasks such as trajectory planning, collision avoidance, and motion control. Consequently, perception systems must provide accurate and consistent estimates of a vehicle's position and orientation while operating under real-time constraints.
+Autonomous driving systems rely on accurate environmental perception to understand their surroundings and make safe driving decisions. Reliable estimation of a vehicle's position and orientation is essential for tasks such as localization, trajectory planning, collision avoidance, and motion control. Achieving this using a single overhead camera presents several challenges, including image distortion, perspective effects, and measurement noise, all of which can reduce localization accuracy.
 
-This chapter introduces the motivation behind the proposed work, defines the research problem, outlines the objectives and contributions of the project, and provides an overview of the remaining chapters.
+This project addresses these challenges by developing a vision-based vehicle localization framework that combines camera calibration, homography-based coordinate transformation, deep learning-based instance segmentation, and state estimation techniques to estimate the vehicle's position and orientation in real time. The proposed approach aims to provide accurate and stable localization suitable for autonomous vehicle research and experimental test environments.
+
+This chapter presents the motivation for the project, defines the problem statement, outlines the objectives and contributions of the work, and provides an overview of the remainder of the report.
 
 \section{Motivation}
 
-Autonomous driving research has highlighted the importance of robust perception systems through the development of standardized benchmark datasets and evaluation frameworks that enable reliable vehicle detection and localization in real-world scenarios \cite{geiger2012kitti}. These advances have significantly accelerated the development of computer vision techniques for intelligent transportation systems.
+Autonomous driving research has highlighted the importance of robust perception systems through the development of standardized benchmark datasets and evaluation frameworks that have enabled the evaluation and comparison of vehicle detection and localization algorithms in real-world scenarios \cite{geiger2012kitti}. These advances have significantly accelerated the development of computer vision techniques for intelligent transportation systems.
 
 For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget limitations. Infrastructure-based perception using a stationary overhead camera provides an attractive alternative by offering a global view of the driving environment while reducing onboard sensing requirements.
 
 \sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
 
-Despite these advantages, accurately estimating vehicle positions from overhead imagery remains challenging. Camera lens distortion, perspective transformation, measurement noise, and changing illumination conditions can degrade localization accuracy. Therefore, robust computer vision and state estimation techniques are required to transform image observations into reliable real-world vehicle trajectories suitable for autonomous driving applications.
+Despite these advantages, accurately estimating vehicle positions from overhead imagery remains challenging. Camera lens distortion, perspective distortion, orientation ambiguity and measurement noise can degrade localization accuracy. Therefore, integrating robust deep-learning vision models with recursive state estimation techniques is required to transform raw, noisy image observations into smooth, reliable real-world vehicle trajectories.
 
 
-\section{Background}
 
-This contains the background
+\begin{figure}[htbp]
+	\begin{adjustwidth}{-2cm}{-2cm}   % widen symmetrically by 2cm on each side
+		\centering
+		\includegraphics[width=1.15\textwidth, trim=0 10 0 10, clip]{Figures/birdseye_view.pdf}
+		\captionsetup{justification=centering, singlelinecheck=false, width=1.15\textwidth}
+		\caption{Bird's-eye-view of the experimental miniature autonomous driving test environment captured using an overhead fisheye camera.}
+		\label{fig:birdseye_setup}
+	\end{adjustwidth}
+\end{figure}
 
-\section{Problem Statement and Objective}
 
-This contains the stated
+\section{Objectives and Contributions}
+
+The primary objective of this project is to develop a reliable infrastructure-based vehicle localization system for miniature autonomous vehicles using an overhead fisheye camera. The proposed system aims to provide accurate vehicle detection, localization, and orientation estimation while improving runtime performance and localization stability.
+
+The main contributions of this project are summarized as follows:
+
+\begin{itemize}
+	\item Development of a vision-based vehicle detection and localization pipeline using YOLOv8 segmentation and homography-based bird's-eye-view transformation.
+	\item Integration and optimization of an Extended Kalman Filter (EKF) for robust vehicle state estimation and smoother pose tracking.
+	\item Implementation of runtime enhancements, including improved camera streaming, image undistortion, and jitter suppression for stable localization.
+	\item Experimental evaluation of the proposed system through latency, vehicle velocity, and residual analysis using real-time visualization tools.
+\end{itemize}
+

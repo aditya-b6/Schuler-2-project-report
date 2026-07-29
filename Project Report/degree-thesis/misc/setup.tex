@@ -264,18 +264,17 @@
 
 % configures indentation of bibentries
 \defbibenvironment{bibliography}
-  {\list
-     {\hspace{0.5\labelalphawidth}\bfseries\printtext[labelalphawidth]{%
-        \printfield{prefixnumber}%
-        \printfield{labelalpha}%
-        \printfield{extraalpha}}}
-     {\setlength{\labelsep}{\biblabelsep}%
-      \setlength{\leftmargin}{0.5\labelalphawidth}%
-      \setlength{\itemsep}{1.5\bibitemsep}%
-      \setlength{\parsep}{\bibparsep}}%
-      \renewcommand*{\makelabel}[1]{##1\hss}}
-  {\endlist}
-  {\item}
+{\list
+	{\printtext[labelnumberwidth]{%
+			\printfield{labelnumber}}}
+	{\setlength{\labelsep}{\biblabelsep}%
+		\setlength{\leftmargin}{\labelnumberwidth}%
+		\addtolength{\leftmargin}{\labelsep}%
+		\setlength{\itemsep}{1.5\bibitemsep}%
+		\setlength{\parsep}{\bibparsep}}%
+	\renewcommand*{\makelabel}[1]{##1\hss}}
+{\endlist}
+{\item}
 
 
 %----------------------------------------------------------------------------------------
