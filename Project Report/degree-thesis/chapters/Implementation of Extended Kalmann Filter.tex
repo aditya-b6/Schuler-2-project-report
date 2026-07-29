@@ -1,8 +1,8 @@
-\chapter{Implementation of Extended Kalmann Filter}
+\chapter{Implementation of Extended Kalman Filter}
 
-\section{Theory of Kalmann Filters \& EKF}~\cite{CC17}.
+\section{Theory of Kalman Filters \& EKF}~\cite{CC17}.
 
-The motivation of Rudolf Kalmann for deriving the Kalmann filters was to improve the accuracy of estimation and prediction of states using a probabilistic filter. The Kalmann filter works on the principle of predicting the current states of a system based on either a static or dynamic mathematical state space model of the plant and the previously estimated state and then perform correction using current measured states. The accuracy of the filter therein lies in the appropriate physcial plant modelling and fine tuning of the relevant covariance matrices for getting an accurate estimate of states.
+The motivation of Rudolf Kalman for deriving the Kalman filters was to improve the accuracy of estimation and prediction of states using a probabilistic filter. The Kalman filter works on the principle of predicting the current states of a system based on either a static or dynamic mathematical state space model of the plant and the previously estimated state and then perform correction using current measured states. The accuracy of the filter therein lies in the appropriate physcial plant modelling and fine tuning of the relevant covariance matrices of measurement and process noise.
 
 \subsection{State Space Systems}
 The state space refers to the mathematical model of a physical system described using a set of variables which are related by first order differential or difference equation. The variables involved are known as \textbf{state variables} and the system state defined by them is called \textbf{state} in short.
@@ -11,9 +11,9 @@ The state space refers to the mathematical model of a physical system described 
 
 Every physical phenomenon in nature can be measured using modern sensors and mechanical devices. The measurement of any state/path variable embeds a certian noise of uncertainty in the measurement campaign. This is mostly due to the accuracy of sensors. this noise is accompanied by yet another uncertainity of unmodelled disturbances, as the state of a dynamic system constantly changes with time. The mathematical approach for handling uncertainties is highlighted by probabilistic distributions. The probability curve for an ideal measurement campaign with infinite instances of data measurement tends towards a normal distribution as dictated by Central Limit Theorem. The normal distribution of any quantity is described using the mean and the standard deviation.
 
-The linear Kalmann Filter models the measurement noise and the process noise seperately and evaluated them using a factor known as Kalmann Gain. this factor could show the balance or trusting tendency between measurement data point and the prediction data point. The factor is updated after every iteration of calculation and is used to update the filter matrices.
+The linear Kalman Filter models the measurement noise and the process noise seperately and evaluated them using a factor known as Kalman Gain. this factor could show the balance or trusting tendency between measurement data point and the prediction data point. The factor is updated after every iteration of calculation and is used to update the filter matrices.
 
-The disadvantage of Linear Kalmann Filter lies in handling the state space plant models with non-linear differential equations, In EKF however the linearisation is performed dynamically around the current state estimate for every time step using first order taylor series expansion(the Jacobian matrices). This also signifies that the probability distribution of non-linear plants is also non-Gaussian and cannot be depicted using normal distribution. 
+The disadvantage of Linear Kalman Filter lies in handling the state space plant models with non-linear differential equations, In EKF however the linearisation is performed dynamically around the current state estimate for every time step using first order taylor series expansion(the Jacobian matrices). This also signifies that the probability distribution of non-linear plants is also non-Gaussian and cannot be depicted using normal distribution. 
 
 \subsection{One-Dimensional Linear Kalman Filter}
 \label{sec:kalman_filter_1d}
@@ -28,30 +28,40 @@ The following five equations define the complete recursive loop for a linear sys
 \begin{enumerate}[label=\textbf{Step \arabic*:}, leftmargin=*, itemsep=1em]
 	
 	\item \textbf{State Extrapolation (\emph{Predict})}\\
-	This step extrapolates the current system state estimate forward to the next time step/iteration cycle using the governing dynamic model of the plant. For constant velocity dynamics, the position advances by the estimated velocity multiplied by the time interval $\Delta t$, while velocity remains constant.\\
-	$\hat{x}_{n+1,n} = \hat{x}_{n,n} + \Delta t \hat{\dot{x}}_{n,n}$ \quad \text{(or } $\hat{x}_{n+1,n} = \hat{x}_{n,n}$ \text{ for constant dynamics)}
+	This step extrapolates the current system state estimate forward to the next time step/iteration cycle using the governing dynamic model of the plant. For constant velocity dynamics, the position advances by the estimated velocity multiplied by the time interval $\Delta t$, while velocity remains constant.
+	\begin{equation}
+		\hat{x}_{n+1,n} = \hat{x}_{n,n} + \Delta t \hat{\dot{x}}_{n,n} \quad (\text{or } \hat{x}_{n+1,n} = \hat{x}_{n,n} \text{ for constant dynamics})
+	\end{equation}
 	
 	\item \textbf{Covariance Extrapolation (\emph{Predict})}\\
 	This step extrapolates the estimate variance ahead in time to account for uncertainty introduced during the transition interval.%
 	\sidenote{Alternative literature designations for process noise variance $q_n$ include plant noise, driving noise, dynamics noise, model noise, and system noise.}\\
-	Combines the baseline uncertainty of the current estimate with the additive process noise variance ($q_n$).\\
-	$p_{n+1,n} = p_{n,n} + q_n$ \quad \text{(or } $p_{n+1,n}^x = p_{n,n}^x + \Delta t^2 p_{n,n}^v + q_n$ \text{ for constant velocity)}
+	Combines the baseline uncertainty of the current estimate with the additive process noise variance ($q_n$).
+	\begin{equation}
+		p_{n+1,n} = p_{n,n} + q_n \quad (\text{or } p_{n+1,n}^x = p_{n,n}^x + \Delta t^2 p_{n,n}^v + q_n \text{ for constant velocity})
+	\end{equation}
 	
 	\item \textbf{Kalman Gain (\emph{Update})}\\
 	Then compute the optimal weighting coefficient between zero and one that balances trust between the prior prediction and the new sensor data.\\
-	 It evaluates the ratio of the prior extrapolated estimate variance against the total system uncertainty, including measurement variance ($r_n$).\\
-	$K_n = \frac{p_{n,n-1}}{p_{n,n-1} + r_n}$
+	 It evaluates the ratio of the prior extrapolated estimate variance against the total system uncertainty, including measurement variance ($r_n$).
+	\begin{equation}
+		K_n = \frac{p_{n,n-1}}{p_{n,n-1} + r_n}
+	\end{equation}
 	
 	\item \textbf{State Update (\emph{Update})}\\
 	Now refine the prior state estimate by incorporating the actual sensor measurement ($z_n$) sampled at the current cycle.\\
-	Adjusts the prior prediction by the measurement residual (innovation), scaled precisely by the calculated Kalman Gain.\\
-	$\hat{x}_{n,n} = \hat{x}_{n,n-1} + K_n\left(z_n - \hat{x}_{n,n-1}\right)$
+	Adjusts the prior prediction by the measurement residual (innovation), scaled precisely by the calculated Kalman Gain.
+	\begin{equation}
+		\hat{x}_{n,n} = \hat{x}_{n,n-1} + K_n\left(z_n - \hat{x}_{n,n-1}\right)
+	\end{equation}
 	
 	\item \textbf{Covariance Update (\emph{Update})}\\
 	Finally update the estimate variance of the current state to reflect the reduction in uncertainty after consuming the measurement.%
 	\marginnote{Because $(1 - K_n) \le 1$, the estimate variance $p_{n,n}$ strictly decreases during each update, driving the filter toward steady-state convergence.}\\
-	Scales the prior extrapolated variance down by the complementary factor $(1 - K_n)$ to ensure estimator convergence over time.\\
-	$p_{n,n} = (1 - K_n)p_{n,n-1}$
+	Scales the prior extrapolated variance down by the complementary factor $(1 - K_n)$ to ensure estimator convergence over time.
+	\begin{equation}
+		p_{n,n} = (1 - K_n)p_{n,n-1}
+	\end{equation}
 	
 \end{enumerate}
 
@@ -67,24 +77,34 @@ the linear steps are replaced by introducing non-linear state and measurement fu
 \begin{enumerate}[label=\textbf{Step \arabic*:}, leftmargin=*, itemsep=1em]
 	
 	\item \textbf{Non-Linear State Extrapolation (\emph{Predict})}\\
-	Extrapolates the state estimate directly through the non-linear dynamic model function $f(\cdot)$ using known control inputs $u_n$.\\
-	$\hat{x}_{n+1,n} = f\left(\hat{x}_{n,n}, u_n\right)$
+	Extrapolates the state estimate directly through the non-linear dynamic model function $f(\cdot)$ using known control inputs $u_n$.
+	\begin{equation}
+		\hat{x}_{n+1,n} = f\left(\hat{x}_{n,n}, u_n\right)
+	\end{equation}
 	
 	\item \textbf{Linearized Covariance Extrapolation (\emph{Predict})}\\
-	Propagates the estimate variance using the dynamic model Jacobian slope $F_n$, evaluated at the current state estimate, plus process noise variance $q_n$.\\
-	$p_{n+1,n} = F_n p_{n,n} F_n^\top + q_n \quad \text{where} \quad F_n = \left. \frac{\partial f}{\partial x} \right|_{\hat{x}_{n,n}, u_n}$
+	Propagates the estimate variance using the dynamic model Jacobian slope $F_n$, evaluated at the current state estimate, plus process noise variance $q_n$.
+	\begin{equation}
+		p_{n+1,n} = F_n p_{n,n} F_n^\top + q_n \quad \text{where} \quad F_n = \left. \frac{\partial f}{\partial x} \right|_{\hat{x}_{n,n}, u_n}
+	\end{equation}
 	
 	\item \textbf{Kalman Gain (\emph{Update})}\\
-	Computes the optimal weighting coefficient by substituting the linearized measurement Jacobian slope $H_n$ into the variance ratio.\\
-	$K_n = p_{n,n-1} H_n^\top \left(H_n p_{n,n-1} H_n^\top + r_n\right)^{-1} \quad \text{where} \quad H_n = \left. \frac{\partial h}{\partial x} \right|_{\hat{x}_{n,n-1}}$
+	Computes the optimal weighting coefficient by substituting the linearized measurement Jacobian slope $H_n$ into the variance ratio.
+	\begin{equation}
+		K_n = p_{n,n-1} H_n^\top \left(H_n p_{n,n-1} H_n^\top + r_n\right)^{-1} \quad \text{where} \quad H_n = \left. \frac{\partial h}{\partial x} \right|_{\hat{x}_{n,n-1}}
+	\end{equation}
 	
 	\item \textbf{Non-Linear State Update (\emph{Update})}\\
-	Refines the prior prediction by evaluating the measurement residual (innovation) directly against the non-linear measurement function $h(\cdot)$.\\
-	$\hat{x}_{n,n} = \hat{x}_{n,n-1} + K_n\left(z_n - h\left(\hat{x}_{n,n-1}\right)\right)$
+	Refines the prior prediction by evaluating the measurement residual (innovation) directly against the non-linear measurement function $h(\cdot)$.
+	\begin{equation}
+		\hat{x}_{n,n} = \hat{x}_{n,n-1} + K_n\left(z_n - h\left(\hat{x}_{n,n-1}\right)\right)
+	\end{equation}
 	
 	\item \textbf{Linearized Covariance Update (\emph{Update})}\\
-	Updates the current estimate variance using the measurement Jacobian slope $H_n$ scaled by the Kalman Gain.\\
-	$p_{n,n} = \left(I - K_n H_n\right) p_{n,n-1}$
+	Updates the current estimate variance using the measurement Jacobian slope $H_n$ scaled by the Kalman Gain.
+	\begin{equation}
+		p_{n,n} = \left(I - K_n H_n\right) p_{n,n-1}
+	\end{equation}
 	
 \end{enumerate}
 
@@ -272,7 +292,7 @@ To quantify the operational efficacy of the tuned Extended Kalman Filter (\texts
 
 As demonstrated in the empirical telemetry breakdown, the Euclidean correction distance $\Delta r = \sqrt{dx^2 + dy^2}$ exhibits a strong positive dependence on velocity.%
 \marginnote{
-	\textbf{Table 5.2:} Empirical EKF correction magnitude $\Delta r = \|\mathbf{x}_{\text{smooth}} - \mathbf{x}_{\text{raw}}\|$ across velocity regimes.\\
+	\textbf{Table 5.2:} Empirical EKF correction magnitude $\Delta r = \|\mathbf{x}_{\text{smooth}} - \mathbf{x}_{\text{raw}}\|$ across velocity regimes.\label{tab:EKF_Correction}\\
 	\begin{tabular}{@{}lrr@{}}
 		\toprule
 		\textbf{Regime} & \textbf{Med.} & \textbf{Max} \\

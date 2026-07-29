@@ -294,13 +294,25 @@ While the vehicle executed dynamic test maneuvers—such as sharp turns and rapi
 \label{sec:ekf_evaluation}
 
 To quantify the operational efficacy of the tuned Extended Kalman Filter (\textsc{Ekf}), telemetry data comprising $387$ frame transitions was logged during dynamic vehicular navigation. A critical performance criterion for non-linear state estimation is the filter's behavior across varying velocity regimes.%
-\sidenote{In vision-based object tracking, high vehicular velocities exacerbate sensor inaccuracies due to motion blur, detection latency, and frame-to-frame bounding box quantization errors. An optimally tuned filter must dynamically increase its spatial corrections to reject these unphysical anomalies.}
+\marginnote{
+	\captionof{table}{Empirical EKF correction magnitude $\Delta r = \|\mathbf{x}_{\text{smooth}} - \mathbf{x}_{\text{raw}}\|$ across velocity regimes.}\label{tab:EKF_Correction}
+	\begin{tabular}{@{}lrr@{}}
+		\toprule
+		\textbf{Regime} & \textbf{Med.} & \textbf{Max} \\
+		\midrule
+		$0.0\text{--}2.5\text{ m/s}$ & $0.43$ & $10.92$ \\
+		$2.5\text{--}5.0\text{ m/s}$ & $2.80$ & $21.03$ \\
+		$5.0\text{--}7.5\text{ m/s}$ & $4.14$ & $27.02$ \\
+		$7.5\text{--}10.0\text{ m/s}$ & $3.38$ & $33.10$ \\
+		\bottomrule
+	\end{tabular}
+}[2\baselineskip] 
 
 
 % --- Figure 1: Linear Regression ---
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/ekf_fig1_regression.pdf}
+	\includegraphics[width=0.8\textwidth]{figures/ekf_fig1_regression.pdf}	
 	\caption{\label{fig:ekf_regression}Linear regression analysis confirming a statistically significant positive correlation between vehicle velocity and EKF spatial correction magnitude $\Delta r = \|\mathbf{x}_{\text{smooth}} - \mathbf{x}_{\text{raw}}\|$.}
 \end{figure}
 
