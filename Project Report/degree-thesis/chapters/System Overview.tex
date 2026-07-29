@@ -1,56 +1,50 @@
 \chapter{System Overview}
 
 \section{System Workflow}
-The overall workflow of the proposed vehicle localization framework is shown in Figure~\ref{fig:System_workflow}. The workflow is organized into five major stages that transform raw image data acquired from an overhead fisheye camera into reliable vehicle state information. By dividing the complete localization process into well-defined stages, the framework provides a structured and systematic approach for perception, localization, and state estimation, which is consistent with modern autonomous driving pipelines \cite{grigorescu2020survey}.
 
-\sidenote{\textbf{Workflow Organization:} Separating the complete framework into distinct processing stages improves readability, simplifies system validation, and enables individual stages to be independently developed and evaluated.}
+The overall workflow of the proposed vehicle localization framework is illustrated in Figure~\ref{fig:System_workflow}. The framework is organized into five major processing stages that transform raw image data acquired from an overhead fisheye camera into reliable estimates of vehicle position, orientation, and velocity. Dividing the localization process into modular stages provides a structured perception pipeline that simplifies implementation, validation, and future system extensions while remaining consistent with modern autonomous driving architectures \cite{grigorescu2020survey}.%
+\sidenote{\textbf{Workflow Organization:}
+	Separating the localization framework into distinct processing stages improves modularity, simplifies debugging, and enables individual components to be independently developed, tested, and optimized.}
 
-The workflow begins with data acquisition, where video frames are continuously captured via RTSP and buffered for processing. Camera calibration and image preprocessing are then performed using calibrated intrinsic parameters ($K, D$) to compensate for lens distortion. Prior to runtime deployment, an offline stage manages dataset preparation and model training, producing a trained YOLOv8 segmentation model.
+The workflow begins with continuous image acquisition from the overhead IP camera through a Real-Time Streaming Protocol (RTSP) connection. Incoming frames are stored within a dedicated threaded buffer, ensuring that image capture remains independent of the subsequent processing stages and minimizing frame loss during real-time operation. Each acquired image is then processed using the intrinsic fisheye calibration parameters $(K,D)$ to compensate for lens distortion before entering the localization pipeline.
 
-\sidenote{\textbf{Offline and Online Processing:} Model training is performed only once during development, whereas the detection, localization, and state estimation stages operate continuously during real-time system execution.}
+Prior to real-time deployment, an offline processing stage prepares the training dataset, performs annotation of the vehicle body, front, and rear regions, and trains the custom YOLOv8 instance segmentation network. Since network training is computationally expensive and performed only once during development, only the trained network weights are deployed during online operation.%
+\sidenote{\textbf{Offline and Online Processing:}
+	Dataset preparation and network training are performed offline, whereas vehicle detection, localization, and state estimation execute continuously during runtime.}
 
-During runtime initialization, ArUco markers establish a fixed homography matrix to map pixel coordinates to the world frame. The trained YOLOv8 model then performs sub-part segmentation (car body, front, and rear centroids) to compute raw position and orientation. Finally, the state estimation module employs an Extended Kalman Filter (EKF) to output filtered vehicle states $[x, y, \theta, v]$, evaluate residual errors, and track processing latency.
+During system initialization, ArUco fiducial markers positioned around the experimental track establish a global reference frame. Their known physical locations are used to compute a planar homography matrix that transforms image coordinates into metric world coordinates. Once initialized, the trained YOLOv8 instance segmentation model detects the vehicle body together with dedicated front and rear regions. The extracted centroids are transformed into the world coordinate frame, enabling estimation of the vehicle position and heading angle.
 
-\clearpage
+The final stage performs recursive state estimation using an Extended Kalman Filter (EKF). The filter combines successive pose measurements with the CTRV vehicle motion model to reduce localization noise, suppress measurement jitter, and improve temporal consistency. Besides generating the filtered vehicle state vector $[x,y,\theta,v]$, the framework also performs latency monitoring and residual analysis to evaluate real-time performance and localization quality. The resulting vehicle state is subsequently used by higher-level planning, visualization, and autonomous driving applications.
 
 \begin{figure}[htbp]
 	\centering
-	\makebox[\textwidth][c]{%
-		\includegraphics[width=1.5\textwidth]{Figures/System_workflow.pdf}%
-	}
-	\caption{Overall workflow of the proposed vehicle localization framework.}
+	\includegraphics[width=1.55\textwidth]{system_workflow.png}
+	\caption{Overall system workflow of the vehicle localization framework.}
 	\label{fig:System_workflow}
 \end{figure}
 
-\FloatBarrier
 
 \section{Logical Architecture}
 
-Figure~\ref{fig:logical_architecture} illustrates the logical architecture of the proposed bird's-eye-view vehicle localization framework. The system is organized as a collection of interconnected functional modules, where each module performs a specific processing task and forwards its output to the subsequent stage. Such a modular architecture improves system maintainability, scalability, and enables independent development and validation of individual components \cite{bagschik2018system}.
+Figure~\ref{fig:logical_architecture} illustrates the logical architecture of the proposed bird's-eye-view vehicle localization framework. The architecture is organized as a collection of interconnected functional modules, where each module performs a dedicated processing task and forwards its output to the subsequent stage. Such a modular design improves system maintainability, scalability, and simplifies the independent development, testing, and validation of individual software components while following established autonomous driving software architectures \cite{bagschik2018system}.%
+\sidenote{\textbf{Modular Architecture:}
+	Dividing the framework into independent processing modules simplifies debugging, software maintenance, and future system extensions without affecting the remaining components.}
 
-\sidenote{\textbf{Modular Architecture:} Dividing the framework into independent processing modules simplifies debugging, maintenance, and future system extensions without affecting remaining components.}
+The processing pipeline begins with the overhead fisheye camera, which continuously captures images of the experimental driving environment. Video frames are transmitted through an RTSP connection and received by a multithreaded camera interface that separates image acquisition from image processing. By buffering incoming frames in a dedicated acquisition thread, the system minimizes frame loss and maintains a stable processing rate during real-time operation.
 
-The processing pipeline begins with the camera sensor system capturing video frames from the overhead fisheye camera. The frames are streamed to the camera interface, which utilizes a threaded buffer to minimize capture latency. In the image preprocessing stage, calibration matrices ($K, D$) undistort the incoming frames. During system initialization, ArUco detection computes the homography matrix ($H$), establishing the geometric transformation between image pixels and real-world ground coordinates ($420\times266\text{ cm}$). Once computed, the homography matrix is locked for subsequent frames.
+The captured frames are subsequently forwarded to the image preprocessing module, where fisheye image distortion is corrected using the calibrated intrinsic camera parameters $(K,D)$. During system initialization, ArUCo markers positioned around the driving track are detected to establish a fixed planar homography matrix $H$. This transformation maps image coordinates into the metric world coordinate system, providing a common spatial reference for all subsequent localization operations. Since the camera remains stationary throughout the experiments, the homography matrix is computed only once during initialization and reused for the remainder of the runtime.
 
-Vehicle detection and sub-part segmentation are performed using the trained YOLOv8 model, supported by confidence filtering and homography initialization. The model extracts masks and centroids for the car body, front, and rear. These centroids are transformed into world space to compute raw pose and orientation. A motion threshold module checks for vehicle movement to accurately log response time and processing lag.
+Vehicle perception is performed using the trained YOLOv8 instance segmentation network. The model detects the vehicle body together with dedicated front and rear sub-parts, allowing accurate centroid extraction and orientation estimation. The extracted image-space centroids are transformed into the world coordinate frame through the homography matrix, producing raw measurements of vehicle position and heading angle. Additional confidence filtering and motion thresholding improve the robustness of the localization process by suppressing unstable detections and reducing measurement jitter.%
+\sidenote{\textbf{Data Flow:}
+	Each processing module receives standardized inputs and generates clearly defined outputs, enabling sequential data flow with low coupling between software components.}
 
-\sidenote{\textbf{Data Flow:} Each processing stage receives well-defined inputs and produces standardized outputs, allowing information to flow sequentially through the pipeline while maintaining low component coupling.}
+The resulting pose measurements are processed by the Extended Kalman Filter (EKF), which combines the current observations with the non-linear Constant Turn Rate and Velocity (CTRV) vehicle motion model to generate smooth and temporally consistent state estimates. The filtered state vector consists of the vehicle position, orientation, and velocity, represented as $[x,\,y,\,\theta,\,v]^\top$. Finally, the estimated vehicle states are forwarded to the visualization interface, latency monitoring module, and residual analysis tools, enabling comprehensive evaluation of localization accuracy, computational performance, and real-time system behaviour throughout the experimental campaigns.
 
-The state estimation module centers around an Extended Kalman Filter (EKF), which executes recursive predict-and-update cycles on the raw state vector $[x, y, \theta]^\top$. Facilitated by runtime EKF tuning (such as velocity process noise adjustment $Q_{\text{vel}}$), the EKF outputs a smoothed vehicle pose $[x, y, \theta, v]^\top$, filters spatial jitter, and feeds real-time data into a residual plotting tool and telemetry log.
-
-
-\clearpage
-% Push figure to the top of the page instead of vertically centering
-\makeatletter
-\setlength{\@fptop}{0pt}
-\setlength{\@fpbot}{0pt plus 1fil}
-\makeatother
-
-\begin{figure}[p]
+\begin{figure}[htbp]
 	\centering
-	\includegraphics[width=1.7\textwidth]{Figures/Logical_architecture.pdf}
-	\caption{Logical architecture of the proposed vehicle localization framework.}
+	\includegraphics[width=0.95\textwidth]{Figures/Logical_architecture.png}
+	\caption{Logical architecture of the vehicle detection and tracking system, showing functional processing blocks (rectangles), solution concepts/parameters (ellipses), and signal, energy, and material flow paths between them.}
 	\label{fig:logical_architecture}
 \end{figure}
 
-\clearpage
+
