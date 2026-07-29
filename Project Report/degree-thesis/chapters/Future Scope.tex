@@ -1,0 +1,16 @@
+\chapter{Future Scope of Work}
+\label{ch:futurescope}
+
+The work undertaken for the team project has been in continuation of a Master thesis work completed by a previous students. The architectural design of the foundational steps had provided certain boundary conditions for the overlaying work of pose estimation. The future scope includes incremental changes in both areas of this work.
+
+\begin{enumerate}[label=\textbf{Area \arabic*:}, leftmargin=*, itemsep=1em] 
+	\item \textbf{Inference Latency :} The primary reason for latency in the system has been accredited to the high parameter count of the YOLO model used for the object detection pipeline. The million parameter model can be substituted by a lightweight task focused strategically trained model. The computational efficiency of the camera architecture and the inference speed should be considered while making this selection. The model training can be elevated by larger size of annotated datasets created using foundational annotating models like SAM,DINO etc.
+	
+	\item \textbf{Aruco Markers :} The dependency of the localization pipeline on external landmarks such as the Aruco markers can be eliminated with the use of detection of map characteristics including but not limited to the lanes, corners or external peripheral dimensions of the grey map. The flexibility provided by this should improve generalization of the localization algorithm.
+	
+	\item \textbf{Hardware Restrictions :} The secondary reason for lower inference speeds is the large size of the processing frames passed to the model. This size is a consequence of the ratio of object size to the camera's field of vision. The lower occupancy of pixels is an obstacle which could be overcome by restricting field of vision to dedicated zones or using a faster processing device to generate the high quality frames.
+	
+	\item \textbf{Software Architecture :} The code has been implemented in a python environment with no influential use-case of objected oriented programming approach. This could be substituted by changing to Tensorflow and Keras based model training with ONNX wrapper and inference in C++ environment, which is a memory efficient and better suited area for real-time operating systems.
+	
+
+\end{enumerate}

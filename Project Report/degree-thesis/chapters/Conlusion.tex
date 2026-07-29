@@ -1,0 +1,19 @@
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+\textbf{Summary}\\
+In this thesis, we built a real-time vehicle detection and tracking system using a single overhead fisheye camera to provide a bird's-eye view. By bringing together modern computer vision and deep learning, our system successfully tracks a vehicle's position, orientation, and speed on the fly. The complete pipeline handles everything from grabbing images and fixing fisheye distortion to using ArUco markers for mapping coordinates and YOLOv8 for recognizing the vehicles. To make the tracking even smoother and more reliable, we integrated an Extended Kalman Filter (EKF), which effectively cuts down on noise and keeps our state estimates consistent.
+
+\textbf{Major Achievements \& Critical Assessment}\\
+\label{sec:achievements}
+Our experiments showed that the proposed approach works exceptionally well in practice. Here are the major achievements of our work:
+\begin{itemize}
+	\item \textbf{High Stability and Accuracy:} By fine-tuning the EKF during runtime and analyzing residuals, we achieved highly stable and accurate real-time tracking.
+	\item \textbf{Reduced Jitter:} We significantly cut down on measurement jitter, ensuring smoother trajectory data.
+	\item \textbf{Low Processing Latency:} The system runs efficiently enough to be viable for real-world miniature autonomous driving setups.
+	\item \textbf{Robust Pipeline:} The overall architecture held up strong during our tests, combining motion thresholding and latency tracking to maintain performance.
+\end{itemize}
+While our setup does rely on visible ArUco markers and needs decent computing power to run YOLOv8, the results demonstrate that it is highly robust under the tested conditions.
+
+\textbf{Related Topics}\\
+This project touches on several exciting areas in the autonomous driving space, particularly visual odometry, tracking multiple objects at once, and running AI at the edge. The way we used YOLOv8 for real-time segmentation aligns with the latest trends in embedded vision, while our EKF implementation is a great practical example of classical state estimation and control theory in action.

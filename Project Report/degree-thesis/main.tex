@@ -83,7 +83,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 
 %%% CHANGE THIS:
 % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
-\thesistitle{A holistic system study and implementation of EKF for BirdEyeViewDetection}
+\thesistitle{System Architecture and EKF Implementation for Vehicle Localization in an Autonomous Miniature Driving Environment}
 
 % date to be printed on the title, this will automatically update and be in the correct format
 % If any changes to this format (Month JJJJ) are necessary the definition can be found in line 337
@@ -98,10 +98,10 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \supervisor{Prof. Ralph Schüler}
 
 % Your university's name and URL, this is used in the title page, print it elsewhere with \univname
-\university{\href{https://www.uni-bamberg.de/en/}{Hochschule Esslingen}}
+\university{\href{https://www.hs-esslingen.de/}{Hochschule Esslingen}}
 
 % Your research group's name and URL, this is used in the title page, print it elsewhere with \groupname
-\group{\href{https://www.uni-bamberg.de/en/psi/}{Master Of Engineering in Automotive Systems}}
+\group{\href{https://www.hs-esslingen.de/}{Master of Engineering (M.Eng.) Automotive Systems}}
 
 % Your department's name and URL, this is used in the title page, print it elsewhere with \deptname
 \department{department not used}
@@ -115,7 +115,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 % International Software Systems Science
 % Software Systems Science
 % Education in Business and Information Systems
-\faculty{Under Guidance of Prof. Ralf Schüler \\ \href{https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng}{Faculty of Mobility Technology}}
+\faculty{Under the guidance of Prof. Dr.-Ing. Ralf Schuler \\ \href{https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng}{Faculty of Mobility and technology}}
 
 % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 \addresses{address not used}
@@ -128,6 +128,8 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 %----------------------------------------------------------------------------------------
 %	END OF THESIS INFORMATION
 %----------------------------------------------------------------------------------------
+% To clear blank pages in the document
+\let\cleardoublepage\clearpage
 
 
 \begin{document}
@@ -244,7 +246,10 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \input{chapters/System Overview}
 \input{chapters/Objection detection and localization}
 \input{chapters/Measurement Campaigns}
-\input{chapters/Implementation of Extended Kalmann Filter}
+\input{chapters/Implementation of Extended Kalman Filter}
+\input{chapters/Code Optimization.tex}
+\input{chapters/Conlusion.tex}
+\input{chapters/Future Scope.tex}
 %\input{chapters/chapter3.tex}
 %\input{chapters/chapter4.tex}
 %\input{chapters/chapter5.tex}
@@ -272,7 +277,7 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-\include{appendices/appendixA}
+%\include{appendices/appendixA}
 %\include{appendices/appendixB}
 %\include{appendices/appendixC}
 
@@ -309,35 +314,5 @@ consistentlayout, % layout of declaration, abstract and acknowledgements pages m
 \end{multicols}
 
 %----------------------------------------------------------------------------------------
-
-%----------------------------------------------------------------------------------------
-%	DECLARATION PAGE
-%----------------------------------------------------------------------------------------
-
-\begin{declaration}
-\addchaptertocentry{\authorshipname} % Add the declaration to the table of contents
-
-% TODO Change the declaration according as needed. *
-
-%\selectlanguage{ngerman}
-Ich erkläre hiermit gemä\ss\ \S~9 Abs.\,12 APO, dass ich die vorstehende {\thesistype}arbeit selbständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe. Des Weiteren erkläre ich, dass die digitale Fassung der gedruckten Ausfertigung der {\thesistype}arbeit ausnahmslos in Inhalt und Wortlaut entspricht und zur Kenntnis genommen wurde, dass diese digitale Fassung einer durch Software unterstützten, anonymisierten Prüfung auf Plagiate unterzogen werden kann. 
-
-\bigskip
-\bigskip
-
-\begin{tabular}{@{}l@{}}
-  Bamberg, den \rule[-0.8em]{10em}{0.5pt}\\[2ex]
-  ~
-\end{tabular}
-\hspace{\fill}%
-\begin{tabular}{@{}c@{}}
-  \rule[-0.8em]{20em}{0.5pt}\\[2ex]
-  \authorname
-\end{tabular}\hspace{\fill}
-
-
-
-
-\end{declaration}
 
 \end{document}

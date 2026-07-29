@@ -1,0 +1,83 @@
+\chapter{Code Optimizations and Functional Improvements}
+\label{ch:code-optimization}
+
+This chapter outlines the key optimizations applied to the bird's-eye-view vehicle detection framework, beyond the Extended Kalman Filter (EKF) integrations. These improvements focus on minimizing latency, refining mathematical models, and enhancing code maintainability.
+
+\section{Code Execution and Performance Optimization}
+
+\begin{itemize}
+    \item \textbf{Video Stream Buffer Reduction}\\
+    \textit{Impact:} Reduces the OpenCV \texttt{CAP\_PROP\_BUFFERSIZE} parameter from 2 to 1, minimizing frame queueing latency to ensure the YOLO model processes the absolute most recent frame.
+    
+    \textbf{Original Code:}
+    \begin{lstlisting}[language=Python]
+self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+    \end{lstlisting}
+    
+    \textbf{Improved Code:}
+    \begin{lstlisting}[language=Python]
+self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+    \end{lstlisting}
+
+    \item \textbf{Movement Tracking and Responsiveness Diagnostics}\\
+    \textit{Impact:} Introduces real-time processing lag calculation by comparing the current timestamp with the frame's origin timestamp. This diagnostic overlay (\texttt{lag\_ms}) allows for immediate visual feedback on end-to-end processing delay.
+    
+    \textbf{Original Code:}
+    \begin{lstlisting}[language=Python]
+# Not Present
+    \end{lstlisting}
+    
+    \textbf{Improved Code:}
+    \begin{lstlisting}[language=Python]
+lag_ms = (time.time() - frame_time) * 1000
+cv2.putText(annotated, f"Lag ={lag_ms:.4f} ms ", (30, 110),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+    \end{lstlisting}
+\end{itemize}
+
+\section{Pose Estimation and Math Improvements}
+
+\begin{itemize}
+    \item \textbf{Full 360\textdegree{} Orientation Calculation}\\
+    \textit{Impact:} Removes the absolute value \texttt{abs()} wrappers around the axis projections. By preserving the mathematical signs (\(\pm\)) of the X and Y vectors, \texttt{np.arctan2} can compute the angle across all four quadrants (a full 360\textdegree{}). This eliminates the previous restriction where the vehicle's heading was limited to a 0--90\textdegree{} quadrant, drastically improving the true physical pose awareness.
+    
+    \textbf{Original Code:}
+    \begin{lstlisting}[language=Python]
+orientation_deg = np.degrees(np.arctan2(abs(proj_y), abs(proj_x)))
+    \end{lstlisting}
+    
+    \textbf{Improved Code:}
+    \begin{lstlisting}[language=Python]
+orientation_rad = np.arctan2(proj_y, proj_x)
+orientation_deg = np.degrees(orientation_rad)
+    \end{lstlisting}
+
+    \item \textbf{Fisheye Undistortion Balance Tuning}\\
+    \textit{Impact:} Changes the fisheye balance parameter from 1.0 to 0.5. This provides a better compromise between retaining all original source pixels (Field of View) and eliminating the large black borders introduced during the mathematical rectification process.
+    
+    \textbf{Original Code:}
+    \begin{lstlisting}[language=Python]
+balance = 1
+    \end{lstlisting}
+    
+    \textbf{Improved Code:}
+    \begin{lstlisting}[language=Python]
+balance = 0.5
+    \end{lstlisting}
+
+    \item \textbf{Kinematic Velocity Tracking}\\
+    \textit{Impact:} Previously, the framework only extracted raw positional coordinates without any temporal motion history. By extracting the state vector from the newly integrated tracking module, the system now continuously computes and displays the vehicle's real-time velocity, unlocking advanced trajectory analysis.
+    
+    \textbf{Original Code:}
+    \begin{lstlisting}[language=Python]
+# Not Present (Only raw spatial position extracted)
+    \end{lstlisting}
+    
+    \textbf{Improved Code:}
+    \begin{lstlisting}[language=Python]
+# Extract velocity from the EKF state vector (x[3])
+velocity = ekf.x[3, 0]
+cv2.putText(annotated, f"Vel={velocity:.2f} m/s", (30, 150),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 0), 2)
+    \end{lstlisting}
+\end{itemize}
