@@ -5,15 +5,15 @@ Autonomous driving systems rely on accurate environmental perception to understa
 
 This project addresses these challenges by developing an infrastructure-based, vision-based vehicle localization framework. The proposed system integrates threaded image acquisition, fisheye camera calibration, ArUco-based homography coordinate transformation, YOLOv8 instance segmentation for vehicle sub-part detection, and an Extended Kalman Filter (EKF) for robust vehicle state estimation. By combining perception-based pose estimation with probabilistic filtering, the framework provides stable real-time estimation of vehicle position, orientation, and velocity suitable for miniature autonomous vehicle research and structured indoor test environments.
 
-This chapter presents the motivation for the project, defines the problem statement, outlines the objectives and contributions of the work, and provides an overview of the remainder of the report.
 
 \section{Motivation}
 
-Autonomous driving research has highlighted the importance of robust perception systems through the development of standardized benchmark datasets and evaluation frameworks that have enabled the evaluation and comparison of vehicle detection and localization algorithms in real-world scenarios \cite{geiger2012kitti}. These advances have significantly accelerated the development of computer vision techniques for intelligent transportation systems.
+Autonomous driving research has highlighted the importance of robust perception systems through standardized benchmark datasets and evaluation frameworks for vehicle detection and localization in real-world scenarios \cite{geiger2012kitti}. These developments have significantly advanced computer vision techniques for intelligent transportation systems.
 
-For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget limitations. Infrastructure-based perception using a stationary overhead camera provides an attractive alternative by offering a global view of the driving environment while reducing onboard sensing requirements.\sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
+For miniature autonomous vehicle platforms, deploying expensive sensor suites such as LiDAR or multiple synchronized cameras is often impractical because of hardware, computational, and budget constraints. Infrastructure-based perception using a stationary overhead camera provides a practical alternative by offering a global view of the driving environment while reducing onboard sensing requirements.%
+\sidenote{An overhead camera provides a global field of view of the entire test track, reducing self-occlusions and enabling continuous observation of all vehicles within the monitored area.}
 
-Despite these advantages, accurately estimating vehicle position and orientation from overhead imagery remains challenging. Wide-angle fisheye lens distortion, perspective distortion, segmentation uncertainty, and measurement noise can degrade localization accuracy. Therefore, integrating robust deep-learning vision models with recursive state estimation techniques is essential for transforming raw, noisy image observations into smooth and reliable real-world vehicle trajectories.
+Despite these advantages, accurate vehicle localization from overhead imagery remains challenging due to wide-angle fisheye lens distortion, perspective distortion, segmentation uncertainty, and measurement noise. Integrating deep-learning vision models with recursive state estimation is therefore essential for transforming noisy image observations into smooth and reliable real-world vehicle trajectories.
 
 
 \begin{figure}[htbp]
@@ -28,7 +28,7 @@ Despite these advantages, accurately estimating vehicle position and orientation
 
 \section{Objectives and Contributions}
 
-The primary objective of this project is to develop a reliable infrastructure-based vehicle localization framework for miniature autonomous vehicles using an overhead fisheye camera. The proposed framework aims to provide accurate vehicle detection and accurate pose estimation while improving runtime performance and localization stability.
+The primary objective of this project is to develop a reliable infrastructure-based vehicle localization framework for miniature autonomous vehicles using an overhead fisheye camera, enabling accurate vehicle detection and pose estimation while improving runtime performance and localization stability.
 
 The main contributions of this project are summarized as follows:
 
