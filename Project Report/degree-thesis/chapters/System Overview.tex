@@ -40,18 +40,20 @@ Vehicle perception is performed using the trained YOLOv8 instance segmentation n
 
 The resulting pose measurements are processed by the Extended Kalman Filter (EKF), which combines the current observations with the non-linear Constant Turn Rate and Velocity (CTRV) vehicle motion model to generate smooth and temporally consistent state estimates. The filtered state vector consists of the vehicle position, orientation, and velocity, represented as $[x,\,y,\,\theta,\,v]^\top$. Finally, the estimated vehicle states are forwarded to the visualization interface, latency monitoring module, and residual analysis tools, enabling comprehensive evaluation of localization accuracy, computational performance, and real-time system behaviour throughout the experimental campaigns.
 
-\begin{figure}[!htbp]
-	\begin{adjustwidth}{-2.2cm}{-2.2cm}
+
+\begin{figure}[htbp]
+	\begin{adjustwidth}{-2.5cm}{-2.5cm}
 		\centering
-		\includegraphics[width=1.40\textwidth]{Figures/logical_architecture.pdf}
+		\includegraphics[width=1.4\textwidth]{logical_architecture.pdf}
+		
 		\captionsetup{
-			width=1.20\textwidth,
 			justification=centering,
-			singlelinecheck=false
+			singlelinecheck=false,
+			width=1.5\textwidth
 		}
-		\caption{Logical architecture of the proposed bird's-eye-view vehicle localization framework.}
+		
+		\caption[Logical architecture of the proposed vehicle localization framework.]
+		{Logical architecture of the proposed bird's-eye-view vehicle localization framework.}
 		\label{fig:logical_architecture}
 	\end{adjustwidth}
 \end{figure}
-
-
