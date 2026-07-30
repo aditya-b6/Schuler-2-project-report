@@ -1,6 +1,6 @@
 \chapter{Implementation of Extended Kalman Filter}
 \label{chap:ekf}
-\section{Theory of Kalman Filters \& EKF}
+\section{Theory of Kalman Filters, EKF \& CTRV}
 
 The motivation of Rudolf Kalman for deriving the Kalman filters was to improve the accuracy of estimation and prediction of states using a probabilistic filter. The Kalman filter works on the principle of predicting the current states of a system based on either a static or dynamic mathematical state space model of the plant and the previously estimated state and then perform correction using current measured states. The accuracy of the filter therein lies in the appropriate physcial plant modelling and fine tuning of the relevant covariance matrices of measurement and process noise.
 
@@ -114,8 +114,8 @@ the linear steps are replaced by introducing non-linear state and measurement fu
 	
 \end{enumerate}
 
-\section{Non-linear Bicycle Model}
-\label{sec:bicycle_model}
+\subsection{Non-linear Bicycle Model}
+
 
 To accurately track and predict the vehicle's state within the Extended Kalman Filter (\textsc{EKF}), we implement a non-linear kinematic bicycle model.%
 \sidenote{In a kinematic bicycle model, the two front wheels and two rear wheels are lumped together into a single steerable front wheel and a fixed rear wheel, reducing the vehicle geometry to a bicycle representation.}
@@ -254,7 +254,7 @@ Evaluating these analytical integrals yields two distinct operational regimes ba
 	
 \end{enumerate}
 
-\section{Tuning of Q and R Matrices}
+\section{Tuning of Covariance Matrices}
 \label{sec:tuning_q_r}
 
 The performance and numerical stability of the Extended Kalman Filter (\textsc{Ekf}) depends fundamentally on the ratio between the process noise covariance matrix $\mathbf{Q}$ and the measurement noise covariance matrix $\mathbf{R}$.%
@@ -293,7 +293,7 @@ While the vehicle executed dynamic test maneuvers—such as sharp turns and rapi
 \section{Empirical Evaluation of EKF Smoothening}
 \label{sec:ekf_evaluation}
 
-To quantify the operational efficacy of the tuned Extended Kalman Filter (\textsc{Ekf}), telemetry data comprising $387$ frame transitions was logged during dynamic vehicular navigation. A critical performance criterion for non-linear state estimation is the filter's behavior across varying velocity regimes.%
+To quantify the operational efficacy of the tuned Extended Kalman Filter (\textsc{Ekf}), telemetry data comprising large dataset of frame transitions was logged during dynamic vehicular navigation. A critical performance criterion for non-linear state estimation is the filter's behavior across varying velocity regimes.%
 \marginnote{
 	\captionof{table}{Empirical EKF correction magnitude $\Delta r = \|\mathbf{x}_{\text{smooth}} - \mathbf{x}_{\text{raw}}\|$ across velocity regimes.}\label{tab:EKF_Correction}
 	\begin{tabular}{@{}lrr@{}}

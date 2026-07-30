@@ -242,6 +242,7 @@
    {\addvspace{2ex}} % 2ex falls danach Section kommt
 
 \etocsettocstyle{\chapter*{\contentsname}
+                \vspace*{-6ex}%
                 \thispagestyle{plain}%
                 \leftskip\tocleft\parindent0pt}{}
 
