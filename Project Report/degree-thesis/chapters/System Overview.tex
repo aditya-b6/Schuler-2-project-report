@@ -17,10 +17,12 @@ During system initialization, ArUco fiducial markers positioned around the exper
 The final stage performs recursive state estimation using an Extended Kalman Filter (EKF). The filter combines successive pose measurements with the CTRV vehicle motion model to reduce localization noise, suppress measurement jitter, and improve temporal consistency. Besides generating the filtered vehicle state vector $[x,y,\theta,v]$, the framework also performs latency monitoring and residual analysis to evaluate real-time performance and localization quality. The resulting vehicle state is subsequently used by higher-level planning, visualization, and autonomous driving applications.
 
 \begin{figure}[htbp]
-	\centering
-	\includegraphics[width=1.55\textwidth]{system_workflow.png}
-	\caption{Overall system workflow of the vehicle localization framework.}
-	\label{fig:System_workflow}
+	\begin{adjustwidth}{-5.8cm}{0cm}
+		\centering
+		\includegraphics[width=1.57\textwidth]{system_workflow.pdf}
+		\caption{Overall system workflow of the vehicle localization framework.}
+		\label{fig:System_workflow}
+	\end{adjustwidth}
 \end{figure}
 
 
@@ -40,20 +42,13 @@ Vehicle perception is performed using the trained YOLOv8 instance segmentation n
 
 The resulting pose measurements are processed by the Extended Kalman Filter (EKF), which combines the current observations with the non-linear Constant Turn Rate and Velocity (CTRV) vehicle motion model to generate smooth and temporally consistent state estimates. The filtered state vector consists of the vehicle position, orientation, and velocity, represented as $[x,\,y,\,\theta,\,v]^\top$. Finally, the estimated vehicle states are forwarded to the visualization interface, latency monitoring module, and residual analysis tools, enabling comprehensive evaluation of localization accuracy, computational performance, and real-time system behaviour throughout the experimental campaigns.
 
-
 \begin{figure}[htbp]
-	\begin{adjustwidth}{-2.5cm}{-2.5cm}
+	\begin{adjustwidth}{-0.8cm}{0cm}
 		\centering
-		\includegraphics[width=1.4\textwidth]{logical_architecture.pdf}
-		
-		\captionsetup{
-			justification=centering,
-			singlelinecheck=false,
-			width=1.5\textwidth
-		}
-		
+		\captionsetup{width=1.65\textwidth,justification=centering}
+		\includegraphics[width=1.65\textwidth]{logical_architecture.pdf}
 		\caption[Logical architecture of the proposed vehicle localization framework.]
-		{Logical architecture of the proposed bird's-eye-view vehicle localization framework.}
+		{Logical architecture of the proposed BEV framework.}
 		\label{fig:logical_architecture}
 	\end{adjustwidth}
 \end{figure}
