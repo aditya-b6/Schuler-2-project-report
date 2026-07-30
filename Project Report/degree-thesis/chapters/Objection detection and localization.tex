@@ -5,7 +5,7 @@
 \begin{marginfigure}[4\baselineskip]
 	\centering
 	\includegraphics[width=\marginparwidth]{figure3.1}
-	\caption{Overview of the proposed vision-based vehicle detection, localization, and pose estimation framework.}
+	\caption{Overview of the proposed vehicle detection, localization, and pose estimation framework.}
 	\label{fig:framework_overview}
 \end{marginfigure}
 
@@ -30,7 +30,7 @@ The rectified image is processed using a custom-trained YOLOv8 instance segmenta
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\textwidth]{figure3.2}
-	\caption{Vision-based vehicle detection and pose estimation process. (a) Vehicle detection and feature extraction using the proposed YOLOv8 instance segmentation network, including semantic segmentation, binary mask generation, and centroid extraction. (b) Vehicle pose estimation using the extracted body, front, and rear centroids to determine the vehicle position and heading angle.}
+	\caption{Vision-based vehicle detection and pose estimation. (a) YOLOv8 instance segmentation and centroid extraction. (b) Vehicle position and heading estimation using the extracted body, front, and rear centroids.}
 	\label{fig:detection_pose}
 \end{figure}
 
@@ -75,7 +75,7 @@ For each acquired image, the detected marker corners are associated with their c
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figure3.3}
-	\caption{Image-to-world coordinate transformation using ArUCo fiducial markers and planar homography. Known marker correspondences establish the global reference frame, enabling vehicle feature points extracted in image coordinates to be transformed into metric world coordinates.}
+	\caption{Image-to-world coordinate transformation using ArUCo markers and planar homography for metric vehicle localization.}
 	\label{fig:homography}
 \end{figure}
 

@@ -331,7 +331,7 @@ This behavior is categorized across discrete speed brackets in Figure~\ref{fig:e
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.85\textwidth]{figures/ekf_fig3_timeseries.pdf}
-	\caption{\label{fig:ekf_timeseries}Temporal synchronization of vehicle velocity peaks (green) with EKF spatial correction intervention spikes (blue) over 377 post-convergence frames.}
+	\caption{\label{fig:ekf_timeseries}Temporal synchronization of vehicle velocity peaks (green) with EKF spatial correction intervention spikes (blue) over post-convergence frames.}
 \end{figure}
 
 Rather than indicating filter instability, the temporal alignment displayed in Figure~\ref{fig:ekf_timeseries} provides quantitative proof of active kinematic damping. The continuous-time Constant Turn Rate and Velocity (\textsc{Ctrv}) dynamic model acts as a mathematical flywheel: while raw sensor observations experience severe spatial jitter during rapid acceleration, the filter dynamically intervenes precisely when velocity peaks occur.
@@ -340,7 +340,7 @@ Rather than indicating filter instability, the temporal alignment displayed in F
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=0.8\textwidth]{figures/ekf_fig4_trajectory.pdf}
-	\caption{\label{fig:ekf_trajectory}Spatial XY trajectory comparison during a high-speed maneuver segment (frames 150--220), highlighting the filter's ability to reject erratic raw sensor noise while maintaining physical momentum.}
+	\caption{\label{fig:ekf_trajectory}Spatial XY trajectory comparison during a high-speed maneuver segment, highlighting filter's ability to reject raw sensor noise .}
 \end{figure}
 
 Finally, Figure~\ref{fig:ekf_trajectory} illustrates the spatial impact of this damping during a high-speed turning maneuver. The EKF propagates physical momentum forward, successfully isolating the true vehicular trajectory from high-frequency vision noise and bounding-box wobble.
